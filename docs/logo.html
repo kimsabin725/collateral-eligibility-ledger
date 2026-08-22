@@ -1,0 +1,21 @@
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{width:480px;height:480px;overflow:hidden}
+  body{background:#111620}
+  .mark{width:480px;height:480px;position:relative}
+  .frame{position:absolute;inset:34px;border:4px solid #303C4A}
+  .stack{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .bars{display:flex;gap:40px}
+  .bar{width:58px;height:186px;background:#C74430}
+  .rule{width:236px;height:14px;background:#1F8577;margin-top:40px}
+</style>
+<div class="mark">
+  <div class="frame"></div>
+  <div class="stack">
+    <div class="bars"><div class="bar"></div><div class="bar"></div></div>
+    <div class="rule"></div>
+  </div>
+</div>
