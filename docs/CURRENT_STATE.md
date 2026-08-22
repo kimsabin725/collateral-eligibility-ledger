@@ -1,11 +1,21 @@
 # 현재 상태 — 항상 최신으로 유지하는 파일
 
-**갱신: 2026-08-18 23:40 KST** · 마감까지 **D-19** (2026-09-06 13:59 KST)
+**갱신: 2026-08-22 KST** · 마감까지 **D-15** (2026-09-06 13:59 KST)
 
 ## 한 줄
 
-**아이디어 선정 완료.** 18개 후보 발굴 → 13개 제거 → Top 3 → **최종 1개 선택: `Collateral Eligibility Ledger`**.
-착수 전 검증해야 할 사실 3가지가 남아 있다(아래).
+**CC3 배포 완료. 기술 블로커 없음.** 실제 이더리움 메인넷 sNUSD pause 사건을 Attestcoin proof로 검증해
+CC3 온체인에서 신규 여신을 차단하는 것까지 실제로 작동한다. 남은 것은 발표 산출물뿐이다.
+
+```
+EligibilityLedger  0xA47a20079112252afAF2d54fF1FF0268bE3826a4
+GatedCreditLine    0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
+EvmV1Decoder       0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008
+submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df  (gas 346,458)
+탐색기             https://creditcoin3-testnet.subscan.io/account/0xA47a20079112252afAF2d54fF1FF0268bE3826a4
+```
+
+배포 지갑 `0xDd9ddFcEb1dc1dC0aE393DD458Fe376aaB60294a` — faucet 10,000 CTC 수령(2026-08-22), 잔액 약 9,996 CTC.
 
 ## 최종 선택 — Collateral Eligibility Ledger (8.75/10)
 
@@ -20,7 +30,7 @@
 > 📌 **전체 상태를 하나로 복원하려면 루트의 `CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md`(730줄)를 읽어라.**
 > 문제정의·탐색과정·리서치 근거·설계·구현상태·리스크가 전부 들어 있는 스냅샷이다.
 
-## 상태: **구현 진행 중** (아이디어 확정 · 로컬 전부 통과 · 배포만 faucet 대기)
+## 상태: **CC3 배포 완료** (로컬 60/60 · 실배포 검증 완료 · 남은 것은 덱·영상)
 
 판정 근거: `ideation/FINAL_VERDICT.md` (GO) · 동결 스펙: `docs/BUILD_SPEC_V2.md`
 
@@ -32,7 +42,10 @@
 | `contracts/src/GatedCreditLine.sol` | 5,007 bytes — 신규 여신 게이팅, **출구는 절대 차단 안 함** |
 | `contracts/test/eligibility.test.js` | **27/27** |
 | `contracts/test/realdata-eligibility.test.js` | **10/10** — 실제 mainnet proof + 실제 EvmV1Decoder |
-| `contracts/scripts/deploy-eligibility.js` | 작성 완료, faucet 게이트에서 exit 2 |
+| `contracts/scripts/deploy-eligibility.js` | **CC3에서 실행 성공** — 배포+실proof ingest+게이트 거절까지 |
+| `contracts/scripts/demo-rejections.js` | **신규(2026-08-22)** — 위조 proof 4종 온체인 거절 데모, read-only |
+| `README.md` (루트) | **신규(2026-08-22)** — 제출용. 실주소·실tx·재현절차·한계·prior art |
+| `contracts/README.md` | **갱신(2026-08-22)** — v1 전용이던 것을 EligibilityLedger 중심으로 재작성 |
 | v1(VaultAuthorityLedger) 회귀 | 15/15 + 8/8 여전히 통과 (proof 배관 검증용으로 유지) |
 
 **회귀 총합 60/60.**
@@ -48,10 +61,37 @@ tx 0xc25678129b98d6cb082472cc38b3e9908a81829e5826325c71d62318cb2f9c9a
 → GatedCreditLine.openPosition() → revert AssetImpaired
 ```
 
+### CC3 실배포로 증명된 것 [VERIFIED 2026-08-22]
+
+```
+deploy-eligibility.js  → 5개 컨트랙트 배포, 실제 proof(siblings 10 / roots 69) ingest
+                          status NO_PROOF → IMPAIRED, impairedSince=25745732
+                          GatedCreditLine.openPosition() → revert AssetImpaired ✅
+demo-rejections.js     → A 재제출        → QueryAlreadyProcessed          [원장]
+                          B 미등록 emitter → NoMatchingEvent                [원장]
+                          C Merkle 1bit 변조 → "Merkle proof validation failed"        [precompile]
+                          D mainnet proof를 Sepolia로 → "Continuity proof does not match…" [precompile]
+                          거절 후 원장 상태 불변 확인 ✅
+```
+
+C·D는 **애플리케이션 코드에 도달하지도 못한다** — Creditcoin 런타임의 BlockProver가 먼저 revert한다.
+심사 요구사항인 "실패 proof가 거절되는 장면"이 이 스크립트로 충족된다.
+
 ### 남은 작업
 
-1. **CC3 배포** — faucet만 해결되면 `node scripts/deploy-eligibility.js` 한 번으로 끝
-2. 최소 프론트엔드(선택) · README/덱/데모 영상
+| 항목 | 상태 |
+|---|---|
+| 발표덱 8장 | ✅ `docs/deck.html` → `docs/deck.pdf` (8쪽 확인) |
+| 제출폼 텍스트 (description · Attestcoin summary · 30초 피치) | ✅ `docs/SUBMISSION.md` |
+| 데모 영상 대본 (2:40 샷리스트) | ✅ `docs/SUBMISSION.md` |
+| **GitHub 원격 추가 + push** | ⬜ **사람** — 원격 없음, 커밋 1개. `.env` 무시 확인됨 |
+| **덱 PDF 호스팅 → URL** | ⬜ **사람** |
+| **데모 영상 촬영·업로드 → URL** | ⬜ **사람** |
+| DoraHacks 제출 | ⬜ **사람** |
+| 최소 프론트엔드 | ⬜ 선택. 우선순위 낮음(스크립트 데모가 더 안전하다는 판단 유지) |
+
+⚠️ `deploy-eligibility.js`를 다시 돌리면 **새 주소로 재배포되고 `deployment.json`이 덮어써진다.**
+그러면 README·HANDOFF_MANIFEST·이 파일·`docs/deck.html`의 주소가 전부 낡는다. 상세는 `docs/SUBMISSION.md`.
 
 ### CONDITION 1 핵심 증거 [VERIFIED]
 - **USDe**: 통제 Ethereum(`0x4c9EDD58…`, supply 3.99B) → Robinhood Chain LayerZero OFT(`0x5d3a1Ff2…`, supply 288.8M)
@@ -95,16 +135,18 @@ Creditcoin은 outbound 쓰기가 불가하므로 **신용 베뉴 자체가 CC3 �
 
 ## 막혀 있는 것
 
-- **CC3 배포**: faucet이 디스코드 수동 절차. 배포 주소 `0xDd9ddFcEb1dc1dC0aE393DD458Fe376aaB60294a`
-  잔액 **0 CTC** (오늘 재확인). 사람이 직접 받아야 함.
+- ~~CC3 배포 / faucet~~ — **2026-08-22 해소.** 10,000 CTC 수령 후 배포 완료.
+- **데모 영상 촬영** — 에이전트가 못 한다. 대본과 실행 스크립트는 준비 가능.
 - **원문 접근 실패**: Securitize `#HyFi` 3편(medium=Cloudflare 403, securitize.io=JS앱),
   4pillars Vault Registrar 해설(429). **검색 스니펫만 확보 — 인용 확정하려면 사람이 브라우저로 열어야 함.**
 
 ## 다음에 누가 무엇을 하면 되는가
 
-- **에이전트**: 구현 명세 작성 → `EligibilityLedger` 구현. 어제 코드의 5중 검사·시간순서 로직 재사용 가능
-- **사용자**: faucet 수령(디스코드 수동) — 배포의 유일한 블로커
-- **사용자**: faucet 수령(디스코드 수동) · Securitize #HyFi 원문 3편 열람(봇 차단으로 에이전트 접근 불가)
+- **에이전트**: 발표덱 작성 · 데모 영상 대본 · 제출폼 텍스트 초안
+- **사용자**: 데모 영상 촬영·업로드 · 덱 PDF 확인 · DoraHacks 제출
+- **사용자(선택)**: Securitize #HyFi 원문 3편 열람(봇 차단으로 에이전트 접근 불가).
+  덱에서 인용하지 않으면 불필요하다.
+- **보류**: 텔레그램 연동 — 배포가 끝나 급하지 않다. 마감 후로 미룬다.
 
 ---
 > 이 파일을 고친 에이전트는 맨 위 **갱신 시각**도 함께 고칠 것.

@@ -122,7 +122,8 @@ async function main() {
   const since = await ledger.impairedSince(SNUSD);
   console.log('  status after :', STATUS[after]);
   console.log('  impairedSince:', since.toString(), '(source block)');
-  const ev = await ledger.getEvent(0);
+  // `getEvent` is reserved on ethers v6 BaseContract — reach the ABI function explicitly.
+  const ev = await ledger.getFunction('getEvent(uint256)')(0);
   console.log(`  event 0: asset ${ev.asset} impairment=${ev.impairment} srcBlock ${ev.srcBlock}`);
 
   console.log('\n— the credit gate —');
