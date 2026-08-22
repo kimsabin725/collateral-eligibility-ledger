@@ -1,0 +1,500 @@
+<title>Collateral Eligibility Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+  :root{
+    --paper:#E7EAEE; --panel:#FBFCFD; --ink:#101419; --soft:#59636F;
+    --rule:#C6CDD6; --rule-hard:#8D97A3;
+    --verify:#14564F; --verify-tint:#DDE9E6;
+    --impair:#9E3626; --impair-tint:#F2DFDA;
+    --slide-w:1280px; --slide-h:720px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    display:flex; flex-direction:column; align-items:center; gap:24px; padding:24px 12px 64px;
+  }
+
+  .slide{
+    width:var(--slide-w); height:var(--slide-h); flex:0 0 auto;
+    background:var(--panel); color:var(--ink);
+    border:1px solid var(--rule);
+    padding:52px 68px 44px; position:relative;
+    display:flex; flex-direction:column;
+    overflow:hidden;
+  }
+  /* top rail */
+  .rail{
+    display:flex; justify-content:space-between; align-items:baseline;
+    border-bottom:1px solid var(--rule-hard); padding-bottom:9px; margin-bottom:34px;
+    font-family:"JetBrains Mono",ui-monospace,Menlo,monospace;
+    font-size:11px; letter-spacing:.13em; text-transform:uppercase; color:var(--soft);
+  }
+  .rail b{font-weight:500; color:var(--ink)}
+  .num{font-variant-numeric:tabular-nums}
+
+  h1{
+    font-family:Newsreader,Georgia,serif; font-weight:500;
+    font-size:60px; line-height:1.06; letter-spacing:-.018em;
+    margin:0; text-wrap:balance; max-width:19ch;
+  }
+  h2{
+    font-family:Newsreader,Georgia,serif; font-weight:500;
+    font-size:38px; line-height:1.14; letter-spacing:-.012em;
+    margin:0 0 22px; text-wrap:balance; max-width:26ch;
+  }
+  h2 em{font-style:italic; color:var(--verify)}
+  .lede{
+    font-family:Newsreader,Georgia,serif; font-size:21px; line-height:1.5;
+    color:var(--soft); max-width:62ch; margin:0;
+  }
+  p{font-size:15.5px; line-height:1.55; margin:0; max-width:66ch; color:var(--soft)}
+  p strong{color:var(--ink); font-weight:600}
+  .body-flow{display:flex; flex-direction:column; gap:16px; flex:1; min-height:0}
+
+  .eyebrow{
+    font-family:"JetBrains Mono",ui-monospace,monospace; font-size:11px;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--verify);
+    margin:0 0 14px; font-weight:500;
+  }
+
+  code,.mono{font-family:"JetBrains Mono",ui-monospace,Menlo,monospace; font-variant-numeric:tabular-nums}
+  code{font-size:.92em; background:transparent; color:var(--ink)}
+
+  table{border-collapse:collapse; width:100%; font-size:14px}
+  th,td{text-align:left; padding:9px 14px 9px 0; border-bottom:1px solid var(--rule); vertical-align:top}
+  th{
+    font-family:"JetBrains Mono",ui-monospace,monospace; font-size:10.5px; font-weight:500;
+    letter-spacing:.13em; text-transform:uppercase; color:var(--soft);
+    border-bottom:1px solid var(--rule-hard); padding-bottom:7px;
+  }
+  td.mono{font-size:12.5px}
+  td.n{text-align:right; font-variant-numeric:tabular-nums; font-family:"JetBrains Mono",monospace; font-size:13px}
+  .yes{color:var(--verify); font-weight:600}
+  .no{color:var(--impair); font-weight:600}
+
+  .chip{
+    display:inline-block; font-family:"JetBrains Mono",monospace; font-size:10.5px;
+    letter-spacing:.1em; text-transform:uppercase; padding:3px 8px; border:1px solid currentColor;
+    font-weight:500;
+  }
+  .chip.v{color:var(--verify); background:var(--verify-tint)}
+  .chip.i{color:var(--impair); background:var(--impair-tint)}
+
+  .cols{display:grid; gap:34px; flex:1; min-height:0}
+  .c2{grid-template-columns:1fr 1fr}
+  .c2u{grid-template-columns:1.15fr .85fr}
+  .c3{grid-template-columns:repeat(3,1fr)}
+
+  .panel{border:1px solid var(--rule); padding:18px 20px; background:var(--paper)}
+  .panel h3{
+    font-family:"JetBrains Mono",monospace; font-size:10.5px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--soft); margin:0 0 12px; font-weight:500;
+  }
+
+  /* slide 1 */
+  .title-slide{justify-content:space-between}
+  .title-foot{display:flex; justify-content:space-between; align-items:flex-end; gap:40px;
+    border-top:1px solid var(--rule-hard); padding-top:16px}
+
+  /* stamp — the one loud moment */
+  .stamp-row{display:flex; align-items:center; gap:26px; margin:4px 0 2px}
+  .stamp{
+    font-family:"JetBrains Mono",monospace; font-weight:700; font-size:27px;
+    letter-spacing:.06em; padding:13px 22px; border:2.5px solid currentColor;
+  }
+  .stamp.pre{color:var(--soft); opacity:.55}
+  .stamp.post{color:var(--impair); background:var(--impair-tint); transform:rotate(-1.2deg)}
+  .arrow{font-family:"JetBrains Mono",monospace; font-size:22px; color:var(--soft)}
+  .arrow small{display:block; font-size:10px; letter-spacing:.1em; text-transform:uppercase; margin-top:3px}
+
+  /* pipeline */
+  .pipe{display:grid; grid-template-columns:1fr auto 1fr auto 1fr; gap:0; align-items:stretch; margin-bottom:4px}
+  .stage{border:1px solid var(--rule-hard); padding:14px 16px; background:var(--paper)}
+  .stage h4{
+    font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.14em;
+    text-transform:uppercase; color:var(--soft); margin:0 0 8px; font-weight:500;
+  }
+  .stage .big{font-family:Newsreader,Georgia,serif; font-size:19px; line-height:1.25; color:var(--ink)}
+  .stage .sub{font-family:"JetBrains Mono",monospace; font-size:11px; color:var(--soft); margin-top:7px; line-height:1.5}
+  .conn{display:flex; align-items:center; padding:0 12px; color:var(--verify);
+    font-family:"JetBrains Mono",monospace; font-size:13px; white-space:nowrap}
+
+  ol.checks{margin:0; padding:0; list-style:none; counter-reset:c;
+    display:grid; grid-template-columns:repeat(5,1fr); gap:0; border:1px solid var(--rule-hard); border-right:0}
+  ol.checks li{counter-increment:c; border-right:1px solid var(--rule-hard); padding:12px 14px; font-size:12.5px; line-height:1.45; color:var(--soft)}
+  ol.checks li::before{
+    content:counter(c); display:block; font-family:"JetBrains Mono",monospace; font-weight:700;
+    font-size:11px; color:var(--verify); margin-bottom:6px;
+  }
+  ol.checks li b{display:block; color:var(--ink); font-weight:600; font-size:13.5px; margin-bottom:3px}
+  ol.checks li.runtime::before{color:var(--impair)}
+
+  ul.plain{margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px}
+  ul.plain li{font-size:14.5px; line-height:1.5; color:var(--soft); padding-left:18px; position:relative}
+  ul.plain li::before{content:"—"; position:absolute; left:0; color:var(--rule-hard)}
+  ul.plain li b{color:var(--ink); font-weight:600}
+
+  .foot{
+    margin-top:auto; padding-top:14px; border-top:1px solid var(--rule);
+    font-family:"JetBrains Mono",monospace; font-size:10.5px; line-height:1.6;
+    letter-spacing:.02em; color:var(--soft); max-width:none;
+  }
+  .foot b{color:var(--verify); font-weight:500}
+
+  a{color:inherit; text-decoration:none}
+
+  @media print{
+    @page{size:1280px 720px; margin:0}
+    body{background:#fff; padding:0; gap:0; display:block}
+    .slide{border:0; break-after:page; page-break-after:always; margin:0}
+    .slide:last-child{break-after:auto; page-break-after:auto}
+  }
+</style>
+
+<!-- 1 ───────────────────────────────────────────────────────────── -->
+<section class="slide title-slide">
+  <div class="rail"><span><b>Collateral Eligibility Ledger</b></span><span>BUIDL CTC 2026 Fall · RWA / DeFi</span><span class="num">01 / 08</span></div>
+  <div>
+    <p class="eyebrow">Institutional collateral control, proven across chains</p>
+    <h1>An asset stops being good collateral before its price moves.</h1>
+    <p class="lede" style="margin-top:26px">
+      On-chain credit only has the price axis. This ledger adds the other one — and the destination
+      chain verifies the event itself instead of trusting a monitoring vendor.
+    </p>
+  </div>
+  <div class="title-foot">
+    <div>
+      <span class="chip v">Live on CC3 Testnet</span>
+      <p class="mono" style="font-size:12px; margin-top:12px; color:var(--soft)">
+        EligibilityLedger &nbsp;0xA47a20079112252afAF2d54fF1FF0268bE3826a4<br>
+        Real event ingested &nbsp;sNUSD <code>Paused</code> · Ethereum block 25,745,732
+      </p>
+    </div>
+    <p class="mono" style="font-size:11px; text-align:right; color:var(--soft)">
+      60 / 60 local checks<br>4 forgeries rejected on-chain
+    </p>
+  </div>
+</section>
+
+<!-- 2 ───────────────────────────────────────────────────────────── -->
+<section class="slide">
+  <div class="rail"><span>The gap</span><span>Two axes of collateral</span><span class="num">02 / 08</span></div>
+  <h2>TradFi manages collateral on two axes. Chains only carry one.</h2>
+  <div class="cols c2u">
+    <div>
+      <table>
+        <tr><th style="width:34%">Axis</th><th>What it covers</th><th style="width:22%">On-chain lending</th></tr>
+        <tr>
+          <td><b>Price</b></td>
+          <td>Mark, haircut, volatility</td>
+          <td class="yes">Oracle, LTV, liquidation</td>
+        </tr>
+        <tr>
+          <td><b>Eligibility</b></td>
+          <td>Redeemability, transferability, issuer control, instrument pause</td>
+          <td class="no">Effectively absent</td>
+        </tr>
+      </table>
+      <p style="margin-top:20px">
+        The ECB defines eligible collateral in Guideline (EU) 2015/510 Part Four and national central
+        banks vet instruments <em>before</em> they are usable. ICMA triparty repo maintains eligibility
+        sets by grade; ISDA publishes jurisdictional eligible-collateral tables. Eligibility is a
+        first-class control, not a footnote to price.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>The correction we made</h3>
+      <p style="font-size:14px">
+        Our first framing — "the eligibility axis does not exist on-chain" — was <strong>wrong</strong>.
+        Aave can set LTV to zero. Morpho curators can set caps to zero. Hypernative detects and pauses
+        in seconds.
+      </p>
+      <p style="font-size:14px; margin-top:14px">
+        The accurate problem is narrower:
+      </p>
+      <p style="font-size:14.5px; margin-top:12px; color:var(--ink); border-left:2px solid var(--verify); padding-left:14px; line-height:1.5">
+        When an asset-level event fires, the parties holding that asset are <strong>unrelated third-party
+        protocols</strong>. Their only paths are subscribing to the same vendor or acting by hand. No path
+        lets the destination contract <strong>verify the event itself</strong> — and when asset and credit
+        market sit on different chains, the gap widens.
+      </p>
+    </div>
+  </div>
+  <p class="foot">Sources are cited in full in <b>CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md §6, §12</b>. The ECB/ICMA/ISDA framing is documented; we did not obtain a verbatim clause stating eligibility is lost for non-price reasons, and do not claim one.</p>
+</section>
+
+<!-- 3 ───────────────────────────────────────────────────────────── -->
+<section class="slide">
+  <div class="rail"><span>Evidence I</span><span>The event class is real and current</span><span class="num">03 / 08</span></div>
+  <h2>A real instrument was paused on Ethereum <em>nine days ago</em>.</h2>
+  <div class="cols c2u">
+    <div>
+      <div class="panel" style="margin-bottom:18px">
+        <h3>The source transaction we ingest</h3>
+        <p class="mono" style="font-size:12.5px; line-height:1.85; color:var(--ink)">
+          asset&nbsp;&nbsp;&nbsp;sNUSD (Staked NUSD, Neutrl)<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0x08efcc2f3e61185d0ea7f8830b3fec9bfa2ee313<br>
+          event&nbsp;&nbsp;&nbsp;Paused(address)<br>
+          block&nbsp;&nbsp;&nbsp;25,745,732 · 2026-08-13 11:14:59 UTC<br>
+          status&nbsp;&nbsp;receiptStatus = 1
+        </p>
+      </div>
+      <p>
+        Neutrl halted NUSD issuance and redemption. Downstream, <strong>Strata paused its own products
+        separately and by its own decision</strong> — nothing propagated. That silence between an issuer's
+        event and everyone holding the instrument is the entire problem.
+      </p>
+    </div>
+    <div>
+      <table>
+        <tr><th>Holder of sNUSD at that block</th><th style="text-align:right">Balance</th></tr>
+        <tr><td>Pendle Standardized Yield <code>SY-sNUSD</code></td><td class="n">8,202,400</td></tr>
+        <tr><td>Morpho Blue singleton</td><td class="n">1,828,755</td></tr>
+        <tr><td>Uniswap V4 PoolManager</td><td class="n">7,710</td></tr>
+      </table>
+      <p style="margin-top:16px; font-size:14px">
+        Morpho's sNUSD/USDC market still carried <strong>$1,661,397 borrowed</strong> against a reported
+        collateral value of <strong>$0</strong>.
+      </p>
+      <div class="panel" style="margin-top:18px; border-color:var(--impair); background:var(--impair-tint)">
+        <h3 style="color:var(--impair)">Stated limitation</h3>
+        <p style="font-size:13.5px; color:var(--ink)">
+          This incident was <strong>not cross-chain</strong> — issuer, wrapper and lender were all on
+          Ethereum. It proves the event class is real. The cross-chain topology is a separate claim with
+          separate evidence, on the next slide. We do not merge the two.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4 ───────────────────────────────────────────────────────────── -->
+<section class="slide">
+  <div class="rail"><span>Evidence II</span><span>Control and credit already sit on different chains</span><span class="num">04 / 08</span></div>
+  <h2>Nine-figure collateral is already lent on a chain that cannot see the issuer.</h2>
+  <div class="cols c3">
+    <div class="panel">
+      <h3>USDe → Robinhood Chain</h3>
+      <p style="font-size:13.5px">Controlled on Ethereum. Bridged by LayerZero OFT. Lent against on Morpho.</p>
+      <p class="mono" style="font-size:20px; color:var(--ink); margin-top:16px; line-height:1.3">$285,532,168</p>
+      <p style="font-size:12px; margin-top:2px">collateral posted</p>
+      <p class="mono" style="font-size:20px; color:var(--ink); margin-top:14px; line-height:1.3">$251,647,632</p>
+      <p style="font-size:12px; margin-top:2px">borrowed · 92% LLTV</p>
+    </div>
+    <div class="panel">
+      <h3>syrupUSDG → Robinhood Chain</h3>
+      <p style="font-size:13.5px">Maple's pool stays on Ethereum; the collateral market does not.</p>
+      <p class="mono" style="font-size:20px; color:var(--ink); margin-top:16px; line-height:1.3">$90,801,145</p>
+      <p style="font-size:12px; margin-top:2px">collateral posted</p>
+      <p class="mono" style="font-size:20px; color:var(--ink); margin-top:14px; line-height:1.3">$79,438,999</p>
+      <p style="font-size:12px; margin-top:2px">borrowed</p>
+    </div>
+    <div class="panel">
+      <h3>Centrifuge JAAA / JTRSY</h3>
+      <p style="font-size:13.5px">
+        The split is encoded in the protocol itself: <code>PoolId &gt;&gt; 48</code> names the hub chain.
+        Both resolve to <strong>hub = Ethereum</strong>.
+      </p>
+      <p class="mono" style="font-size:13px; color:var(--ink); margin-top:16px; line-height:1.9">
+        spoke Avalanche&nbsp;&nbsp;250,000,001<br>
+        spoke Base&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;48,207,418
+      </p>
+      <p style="font-size:12px; margin-top:10px">A Base collateral market is already open.</p>
+    </div>
+  </div>
+  <p class="foot">
+    All figures read directly from chain state and the Morpho public API, 2026-08-18. <b>The honest counter-argument:</b>
+    on a single chain you would just read the issuer contract, and that is simpler. This project's scope is precisely
+    the case where you cannot.
+  </p>
+</section>
+
+<!-- 5 ───────────────────────────────────────────────────────────── -->
+<section class="slide">
+  <div class="rail"><span>Mechanism</span><span>Attestcoin is load-bearing, not decorative</span><span class="num">05 / 08</span></div>
+  <h2>The ledger has no oracle and no owner-write path. A proof is the only way in.</h2>
+  <div class="pipe">
+    <div class="stage">
+      <h4>Source · Ethereum</h4>
+      <div class="big">sNUSD.Paused()</div>
+      <div class="sub">block 25,745,732<br>an ordinary mainnet transaction</div>
+    </div>
+    <div class="conn">──proof──▶</div>
+    <div class="stage">
+      <h4>Attestcoin</h4>
+      <div class="big">Merkle inclusion<br>+ block continuity</div>
+      <div class="sub">Proof Builder API<br>siblings 10 · continuity roots 69</div>
+    </div>
+    <div class="conn">──▶</div>
+    <div class="stage" style="border-color:var(--verify)">
+      <h4 style="color:var(--verify)">Creditcoin CC3</h4>
+      <div class="big">EligibilityLedger<br>.submitEvent()</div>
+      <div class="sub">BlockProver precompile 0x…0FD2<br>then five checks, in order</div>
+    </div>
+  </div>
+  <ol class="checks" style="margin-top:18px">
+    <li><b>Replay</b>keyed by <code>keccak(chainKey, height, txIndex)</code> — position, recomputed on-chain</li>
+    <li class="runtime"><b>Inclusion</b>the precompile. A bad proof reverts inside the runtime</li>
+    <li><b>Success</b><code>receiptStatus == 1</code>. The precompile does not check this — we do</li>
+    <li><b>Signature</b>is this a configured impairment or restoration event?</li>
+    <li><b>Emitter</b>allowlist. Without it, anyone deploys a look-alike and proves it</li>
+  </ol>
+  <div class="stamp-row" style="margin-top:22px">
+    <div class="stamp pre">NO_PROOF</div>
+    <div class="arrow">▶<small>proof admitted</small></div>
+    <div class="stamp post">IMPAIRED</div>
+    <div style="margin-left:16px">
+      <p style="font-size:14.5px; color:var(--ink)">
+        <strong>GatedCreditLine.openPosition() → revert AssetImpaired.</strong>
+      </p>
+      <p style="font-size:13.5px; margin-top:5px">
+        Checks 4–5 <em>skip</em> non-matching logs rather than reverting — real source transactions are
+        batched; one we ingested carried 48 logs.
+      </p>
+    </div>
+  </div>
+  <p class="foot">
+    Attestcoin is <b>inbound-only</b>: CC3 can verify foreign transactions but cannot write back to them.
+    So the credit venue itself must live on CC3. That constraint shaped the architecture rather than being worked around.
+  </p>
+</section>
+
+<!-- 6 ───────────────────────────────────────────────────────────── -->
+<section class="slide">
+  <div class="rail"><span>Deployed</span><span>CC3 Testnet · chain id 102031</span><span class="num">06 / 08</span></div>
+  <h2>It runs. One command deploys it and ingests the real event end to end.</h2>
+  <div class="cols c2u">
+    <div>
+      <table>
+        <tr><th>Contract</th><th>Address on CC3 Testnet</th></tr>
+        <tr><td>EligibilityLedger</td><td class="mono">0xA47a20079112252afAF2d54fF1FF0268bE3826a4</td></tr>
+        <tr><td>GatedCreditLine</td><td class="mono">0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb</td></tr>
+        <tr><td>EvmV1Decoder <span style="color:var(--soft)">(our build)</span></td><td class="mono">0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008</td></tr>
+        <tr><td>BlockProver precompile</td><td class="mono">0x0000000000000000000000000000000000000FD2</td></tr>
+        <tr><td>Admitting transaction</td><td class="mono">0xbf8bda4f…c68da4df &nbsp;· 346,458 gas</td></tr>
+      </table>
+      <p style="margin-top:18px; font-size:14px">
+        We deploy our own decoder because the one listed on the official chains &amp; environments page is
+        an older build missing <code>getLogsByEventSignature</code>.
+      </p>
+    </div>
+    <div>
+      <div class="panel" style="margin-bottom:16px">
+        <h3>Local regression</h3>
+        <table style="font-size:13px">
+          <tr><td>eligibility.test.js</td><td class="n yes">27 / 27</td></tr>
+          <tr><td>realdata-eligibility.test.js</td><td class="n yes">10 / 10</td></tr>
+          <tr><td>ledger.test.js <span style="color:var(--soft)">(v1 regression)</span></td><td class="n yes">15 / 15</td></tr>
+          <tr><td>realdata.test.js</td><td class="n yes">8 / 8</td></tr>
+          <tr><td style="border:0"><b>Total</b></td><td class="n yes" style="border:0">60 / 60</td></tr>
+        </table>
+      </div>
+      <p style="font-size:14px">
+        The real-data suites fetch <strong>live Attestcoin proofs for real mainnet transactions</strong> and
+        run them through the real decoder. Only the BlockProver precompile is mocked locally — it is a
+        Creditcoin runtime component that cannot exist on a local EVM, and the deployed scripts exercise
+        the real one.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 ───────────────────────────────────────────────────────────── -->
+<section class="slide">
+  <div class="rail"><span>Negative demo</span><span>What the deployed ledger refuses</span><span class="num">07 / 08</span></div>
+  <h2>Four forgeries, four different refusals, on-chain — and the ledger never moved.</h2>
+  <table>
+    <tr><th style="width:34%">Attempt</th><th style="width:16%">Refused by</th><th>Revert</th></tr>
+    <tr>
+      <td><b>A</b> &nbsp;Replay the proof already admitted</td>
+      <td><span class="chip v">ledger</span></td>
+      <td class="mono">QueryAlreadyProcessed</td>
+    </tr>
+    <tr>
+      <td><b>B</b> &nbsp;A genuine proof of a genuine mainnet transaction — emitter not allowlisted</td>
+      <td><span class="chip v">ledger</span></td>
+      <td class="mono">NoMatchingEvent</td>
+    </tr>
+    <tr>
+      <td><b>C</b> &nbsp;The same bundle, Merkle root flipped by <strong>one bit</strong></td>
+      <td><span class="chip i">runtime</span></td>
+      <td class="mono">"Merkle proof validation failed"</td>
+    </tr>
+    <tr>
+      <td><b>D</b> &nbsp;The real mainnet proof, re-labelled as Sepolia</td>
+      <td><span class="chip i">runtime</span></td>
+      <td class="mono">"Continuity proof does not match attestation or checkpoint"</td>
+    </tr>
+  </table>
+  <div class="cols c2u" style="margin-top:26px; gap:40px">
+    <div>
+      <p>
+        <strong>C and D never reach our code.</strong> The BlockProver precompile refuses them inside the
+        Creditcoin runtime — which is the point of building on Attestcoin rather than re-implementing
+        verification.
+      </p>
+      <p style="margin-top:14px">
+        The whole demo runs as <code>eth_call</code> against the live contracts, so it cannot write, and it
+        reads the ledger back afterwards to show <code>IMPAIRED · impairedSince 25745732 · events 1</code>
+        is unchanged.
+      </p>
+    </div>
+    <div class="panel">
+      <h3>Two rules worth arguing about</h3>
+      <ul class="plain" style="gap:13px">
+        <li><b>Gate new risk, never trap users.</b> <code>repay</code> and <code>withdrawCollateral</code> stay open
+          forever. Only new exposure is refused. A control that blocks the exit is a hostage situation.</li>
+        <li><b>Earliest proven impairment wins.</b> A later proof never pushes the cutoff forward. Credit
+          extended after the real event does not become sound because the proof arrived late.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 8 ───────────────────────────────────────────────────────────── -->
+<section class="slide">
+  <div class="rail"><span>Limits</span><span>What we do not claim</span><span class="num">08 / 08</span></div>
+  <h2>The prior art is strong. Here is exactly what is left.</h2>
+  <div class="cols c2" style="gap:44px">
+    <div>
+      <p class="eyebrow">Not claimed</p>
+      <ul class="plain">
+        <li><b>Not real-time protection.</b> Measured attestation lag is 8–9 minutes. This is delayed but
+          verifiable gating of <em>new</em> credit. Hypernative binds detection to pre-approved on-chain
+          actions and responds in seconds — on speed we lose.</li>
+        <li><b><code>NO_PROOF</code> is not a clean bill of health.</b> Absence is unprovable. It means only
+          that nothing has been proven here yet.</li>
+        <li><b>Not control over existing markets.</b> Morpho Blue's core has no pause primitive at all —
+          zero matches for pause/freeze/emergency/blacklist in <code>Morpho.sol</code>. We apply eligibility
+          logic to a venue on CC3; we do not reach into other chains.</li>
+        <li><b>Discovery is not trustless.</b> Choosing <em>which</em> transaction to submit still needs
+          off-chain log scanning. Verification is trustless; discovery is not.</li>
+      </ul>
+    </div>
+    <div>
+      <p class="eyebrow">Prior art, not underrated</p>
+      <table style="font-size:13.5px">
+        <tr><th>Who</th><th>What they already do</th></tr>
+        <tr><td><b>Aave</b></td><td>Guardian + Risk Steward paused rsETH across five networks simultaneously, April 2026</td></tr>
+        <tr><td><b>Chaos Labs</b></td><td>Edge Risk Oracle injects parameters automatically via Chainlink Automation</td></tr>
+        <tr><td><b>Hypernative</b></td><td>Detection bound to on-chain action in seconds — and was Neutrl's own pauser</td></tr>
+        <tr><td><b>Chainlink</b></td><td>MVR feeds can technically carry status; no production eligibility feed found</td></tr>
+      </table>
+      <p style="margin-top:20px; font-size:14.5px; color:var(--ink); border-left:2px solid var(--verify); padding-left:16px; line-height:1.5">
+        In every one of these the trigger is a <strong>human or a market-risk metric</strong>, and the
+        destination <strong>trusts a vendor</strong>. What is missing is narrow and specific: an issuer-side
+        event, carried across a chain boundary, that the destination credit contract verifies for itself.
+        That is the primitive this repo ships.
+      </p>
+    </div>
+  </div>
+  <p class="foot">
+    <b>Nobody-solved-this is not a claim we make.</b> Mock ERC-20s stand in for the lent asset; the source event, the proof,
+    the verification and the refusal are all real. Full limitation list and prior-art assessment in the repository.
+  </p>
+</section>

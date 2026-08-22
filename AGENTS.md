@@ -7,9 +7,13 @@
 | 순서 | 파일 | 내용 |
 |---|---|---|
 | 1 | **`docs/CURRENT_STATE.md`** | **지금 무엇이 정해졌고 무엇이 대기 중인지. 항상 최신** |
-| 2 | `docs/SESSION_LATEST.md` | Claude Code 세션 전문(도구 호출·실행 결과 포함). 근거 추적용 |
-| 3 | `ideation/SHORTLIST_TWO_IDEAS.md` | 살아있는 후보 2개 비교·점수 |
-| 4 | `docs/CODEX_HANDOFF_2026-08-18.md` | 작업 지시서(무엇을 하지 말아야 하는지 포함) |
+| 2 | `README.md` (루트) | 제출용 개요 — 실주소·재현절차·한계·prior art |
+| 3 | `docs/SUBMISSION.md` | 제출 패키지 — 제출폼 텍스트, 데모 영상 대본, 사람이 해야 할 일 |
+| 4 | `docs/SESSION_LATEST.md` | Claude Code 세션 전문(도구 호출·실행 결과 포함). 근거 추적용 |
+| 5 | `docs/CODEX_HANDOFF_2026-08-18.md` | 작업 지시서(무엇을 하지 말아야 하는지 포함) |
+
+**아이디어 선정은 끝났다.** `ideation/`은 이제 결정 기록(왜 이걸 골랐고 무엇을 죽였는지)이지
+살아있는 후보 목록이 아니다. `ideation/SHORTLIST_TWO_IDEAS.md`를 현재 상태로 읽지 말 것.
 
 ## 1. 이 레포에서 두 에이전트가 협업하는 방식
 

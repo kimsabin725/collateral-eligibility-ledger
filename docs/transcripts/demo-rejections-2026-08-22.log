@@ -1,0 +1,24 @@
+◇ injected env (3) from contracts/.env // tip: ⌘ enable debugging { debug: true }
+=== EligibilityLedger — what it refuses ===
+
+network : CC3 Testnet | chainId 102031n
+ledger  : 0xA47a20079112252afAF2d54fF1FF0268bE3826a4
+asset   : 0x08efcc2f3e61185d0ea7f8830b3fec9bfa2ee313 (sNUSD, registered against Ethereum mainnet)
+
+state before: IMPAIRED | impairedSince 25745732 | events 1 
+
+— fetching two real proofs —
+  admitted sNUSD pause  block 25745732
+  unrelated mainnet tx  block 25772893 
+
+— rejections —
+  A. replay of the admitted proof     ✅ [ledger]    QueryAlreadyProcessed
+  B. real proof, emitter not listed   ✅ [ledger]    NoMatchingEvent
+  C. forged Merkle root (1 bit)       ✅ [precompile] Merkle proof validation failed
+  D. mainnet proof sent as Sepolia    ✅ [precompile] Continuity proof does not match attestation or checkpoint
+
+— state after —
+state after : IMPAIRED | impairedSince 25745732 | events 1
+  unchanged: ✅
+
+RESULT: ✅ four distinct forgeries rejected on-chain; the ledger did not move

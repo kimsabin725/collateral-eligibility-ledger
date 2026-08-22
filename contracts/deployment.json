@@ -1,0 +1,11 @@
+{
+  "network": "CC3 Testnet",
+  "decoder": "0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008",
+  "ledger": "0xA47a20079112252afAF2d54fF1FF0268bE3826a4",
+  "creditLine": "0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb",
+  "blockProver": "0x0000000000000000000000000000000000000FD2",
+  "asset": "0x08efcc2f3e61185d0ea7f8830b3fec9bfa2ee313",
+  "sourceTx": "0xc25678129b98d6cb082472cc38b3e9908a81829e5826325c71d62318cb2f9c9a",
+  "sourceBlock": "25745732",
+  "submitTx": "0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df"
+}

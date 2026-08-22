@@ -1,0 +1,38 @@
+◇ injected env (3) from .env // tip: ⌘ enable debugging { debug: true }
+=== EligibilityLedger — deploy & ingest a real mainnet impairment ===
+
+network : CC3 Testnet | chainId 102031n
+deployer: 0xDd9ddFcEb1dc1dC0aE393DD458Fe376aaB60294a
+balance : 9999.996586695 CTC
+
+— deploying —
+  deployed EvmV1Decoder         0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008
+  deployed EligibilityLedger    0xA47a20079112252afAF2d54fF1FF0268bE3826a4
+  deployed GatedCreditLine      0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
+  deployed MockERC20            0xC41fCB8c310528D403d9C03C9D10Fc17bf64F638
+  deployed MockERC20            0x7D340C288606900cA12DDB6F3AF9d83d245A8342
+
+— configuring —
+  registered asset   0x08efcc2f3e61185d0ea7f8830b3fec9bfa2ee313 (chainKey 3)
+  impairment sigs   Paused(address), Paused()
+  restoration sigs  Unpaused(address), Unpaused()
+  market listed     collateral 0x08efcc2f3e61185d0ea7f8830b3fec9bfa2ee313 LTV 92%
+
+— fetching the real Attestcoin proof —
+  attested height: 25810970 | needed: 25745732
+  proof: block 25745732 | siblings 10 | roots 69
+
+— submitting —
+  status before: NO_PROOF
+  submitEvent tx: 0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df | gas 346458
+
+— reading back —
+  status after : IMPAIRED
+  impairedSince: 25745732 (source block)
+  event 0: asset 0x08EFCC2F3e61185D0EA7F8830B3FEc9Bfa2EE313 impairment=true srcBlock 25745732
+
+— the credit gate —
+  openPosition reverted: AssetImpaired ✅
+
+RESULT: ✅ a real Ethereum impairment event was verified on Creditcoin and now gates new credit
+deployment.json written
