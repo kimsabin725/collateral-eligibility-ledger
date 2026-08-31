@@ -1,6 +1,6 @@
 # 현재 상태 — 항상 최신으로 유지하는 파일
 
-**갱신: 2026-08-22 KST** · 마감까지 **D-15** (2026-09-06 13:59 KST)
+**갱신: 2026-08-31 KST** · 마감까지 **D-15** (2026-09-06 13:59 KST)
 
 ## 한 줄
 
@@ -30,7 +30,7 @@ submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68
 > 📌 **전체 상태를 하나로 복원하려면 루트의 `CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md`(730줄)를 읽어라.**
 > 문제정의·탐색과정·리서치 근거·설계·구현상태·리스크가 전부 들어 있는 스냅샷이다.
 
-## 상태: **CC3 배포 완료** (로컬 60/60 · 실배포 검증 완료 · 남은 것은 덱·영상)
+## 상태: **제출 완료** (2026-08-31) — 심사 발표 2026-09-18
 
 판정 근거: `ideation/FINAL_VERDICT.md` (GO) · 동결 스펙: `docs/BUILD_SPEC_V2.md`
 
@@ -77,18 +77,20 @@ demo-rejections.js     → A 재제출        → QueryAlreadyProcessed         
 C·D는 **애플리케이션 코드에 도달하지도 못한다** — Creditcoin 런타임의 BlockProver가 먼저 revert한다.
 심사 요구사항인 "실패 proof가 거절되는 장면"이 이 스크립트로 충족된다.
 
-### 남은 작업
+### 제출 완료 (2026-08-31)
 
-| 항목 | 상태 |
+| 산출물 | |
 |---|---|
-| 발표덱 8장 | ✅ `docs/deck.html` → `docs/deck.pdf` (8쪽 확인) |
-| 제출폼 텍스트 (description · Attestcoin summary · 30초 피치) | ✅ `docs/SUBMISSION.md` |
-| 데모 영상 대본 (2:40 샷리스트) | ✅ `docs/SUBMISSION.md` |
-| **GitHub 원격 추가 + push** | ⬜ **사람** — 원격 없음, 커밋 1개. `.env` 무시 확인됨 |
-| **덱 PDF 호스팅 → URL** | ⬜ **사람** |
-| **데모 영상 촬영·업로드 → URL** | ⬜ **사람** |
-| DoraHacks 제출 | ⬜ **사람** |
-| 최소 프론트엔드 | ⬜ 선택. 우선순위 낮음(스크립트 데모가 더 안전하다는 판단 유지) |
+| DoraHacks 제출 | ✅ "BUIDL Submitted" — under review |
+| GitHub (공개) | https://github.com/kimsabin725/collateral-eligibility-ledger |
+| 덱 PDF | `docs/deck.pdf` (8장) |
+| 데모 영상 | https://youtu.be/9gG6zEujYBA (2:36, 본인 나레이션) |
+| 트랙 | RWA / DeFi |
+| 제출 입력값 전문 | `docs/DORAHACKS_SUBMISSION_INPUTS.md` |
+
+**심사 전까지 수정 가능하다**("You can still edit this BUIDL before judging").
+미확인 항목 2개: 이메일 칸이 개인 주소(`kimsabin725@naver.com`)인지, Vision 256자 요약본 내용.
+
 
 ⚠️ `deploy-eligibility.js`를 다시 돌리면 **새 주소로 재배포되고 `deployment.json`이 덮어써진다.**
 그러면 README·HANDOFF_MANIFEST·이 파일·`docs/deck.html`의 주소가 전부 낡는다. 상세는 `docs/SUBMISSION.md`.
