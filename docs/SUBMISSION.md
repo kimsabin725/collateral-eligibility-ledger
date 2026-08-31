@@ -9,9 +9,9 @@ Everything DoraHacks asks for, ready to paste. Deadline **2026-09-06 13:59 KST**
 | Technical doc explaining setup and Attestcoin usage | ✅ `README.md`, `contracts/README.md` |
 | Deployed to testnet | ✅ CC3 Testnet, addresses below |
 | Original work built during the hackathon | ✅ repo history starts 2026-08-17 |
-| GitHub repository + README | ⬜ **repo not yet pushed to a remote** |
-| Deck or whitepaper PDF URL | ✅ `docs/deck.pdf` — ⬜ needs hosting |
-| Prototype demo video URL | ⬜ **script below; recording is a human step** |
+| GitHub repository + README | ✅ https://github.com/kimsabin725/collateral-eligibility-ledger |
+| Deck or whitepaper PDF URL | ✅ hosted on GitHub (link below) |
+| Prototype demo video URL | ✅ `docs/demo.mp4` (2:36) — ⬜ needs a YouTube URL |
 | Project description + Attestcoin integration summary | ✅ below |
 
 ---
