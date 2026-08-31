@@ -64,4 +64,4 @@ python3 tools/export-claude-session.py       # → docs/SESSION_LATEST.md 재생
 - `contracts/.env`를 **출력·커밋하지 말 것** (개인키 포함, `.gitignore` 처리됨).
 - 아이디어가 확정되기 전에는 **새 컨트랙트를 쓰지 말 것.**
 - `contracts/` 기존 코드를 수정하지 말 것 — 재사용 여부는 아이디어 확정 후 결정한다.
-- 커밋·푸시는 **사용자가 명시적으로 지시할 때만.** 현재 이 레포는 커밋이 하나도 없다.
+- 커밋·푸시는 **사용자가 명시적으로 지시할 때만.** 원격은 `kimsabin725/collateral-eligibility-ledger`(공개).
