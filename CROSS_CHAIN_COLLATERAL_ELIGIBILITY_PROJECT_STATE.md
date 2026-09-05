@@ -723,6 +723,6 @@ faucet          Creditcoin Discord #token-faucet  (API/CLI/웹 없음 — 사람
 | `ideation/STRUCTURAL_SEARCH_ROUND1.md` | 8개 구조적 문제영역 kill table |
 | `ideation/FEASIBILITY_LOOKTHROUGH.md` | Attestcoin state-proof 부재 확인(설계 최상위 제약의 출처) |
 | `docs/CURRENT_STATE.md` | 짧은 현재상태 요약(에이전트 진입점) |
-| `docs/SESSION_LATEST.md` | 세션 전문 로그 (`python3 tools/export-claude-session.py`로 갱신) |
+| `private/private/docs/SESSION_LATEST.md (비공개)` (비공개, 저장소 밖) | 세션 전문 로그 (`python3 private/tools/export-claude-session.py (비공개)`로 갱신) |
 | `AGENTS.md` / `CLAUDE.md` | 에이전트 자동 로딩 진입점(협업 규칙·기술 제약·금지사항) |
 | `spike/BASELINE.md`, `spike/FINDINGS.md` | Attestcoin 기술 베이스라인·실측 결과 |

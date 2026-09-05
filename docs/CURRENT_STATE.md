@@ -86,7 +86,7 @@ C·D는 **애플리케이션 코드에 도달하지도 못한다** — Creditcoi
 | 덱 PDF | `docs/deck.pdf` (8장) |
 | 데모 영상 | https://youtu.be/9gG6zEujYBA (2:36, 본인 나레이션) |
 | 트랙 | RWA / DeFi |
-| 제출 입력값 전문 | `docs/DORAHACKS_SUBMISSION_INPUTS.md` |
+| 제출 입력값 전문 | `private/docs/DORAHACKS_SUBMISSION_INPUTS.md` (비공개, 저장소 밖) |
 
 **심사 전까지 수정 가능하다**("You can still edit this BUIDL before judging").
 미확인 항목 1개: Vision 256자 요약본 내용.
@@ -152,4 +152,4 @@ Creditcoin은 outbound 쓰기가 불가하므로 **신용 베뉴 자체가 CC3 �
 
 ---
 > 이 파일을 고친 에이전트는 맨 위 **갱신 시각**도 함께 고칠 것.
-> 세션 로그 갱신: `python3 tools/export-claude-session.py`
+> 세션 로그 갱신: `python3 private/tools/export-claude-session.py (비공개)`

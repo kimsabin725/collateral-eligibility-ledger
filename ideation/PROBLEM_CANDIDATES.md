@@ -1,6 +1,6 @@
 # Problem Candidates — external research first, ideas second
 
-> Compiled 2026-08-17. Deliberately **not** anchored to `BUIDL_CTC_2026_FALL_AGENT_BRIEF.md`.
+> Compiled 2026-08-17. Deliberately **not** anchored to `BUIDL_CTC_2026_FALL_AGENT_BRIEF.md` (비공개 작업 문서, 저장소 밖).
 > Method: search for documented failures, losses, and friction in the wild, *then* ask whether
 > Attestcoin verification would matter. Problems that only exist because Attestcoin exists were
 > discarded.

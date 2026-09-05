@@ -9,7 +9,7 @@
 | 1 | **`docs/CURRENT_STATE.md`** | **지금 무엇이 정해졌고 무엇이 대기 중인지. 항상 최신** |
 | 2 | `README.md` (루트) | 제출용 개요 — 실주소·재현절차·한계·prior art |
 | 3 | `docs/SUBMISSION.md` | 제출 패키지 — 제출폼 텍스트, 데모 영상 대본, 사람이 해야 할 일 |
-| 4 | `docs/SESSION_LATEST.md` | Claude Code 세션 전문(도구 호출·실행 결과 포함). 근거 추적용 |
+| 4 | `private/private/docs/SESSION_LATEST.md (비공개)` (비공개, 저장소 밖) | Claude Code 세션 전문(도구 호출·실행 결과 포함). 근거 추적용 |
 | 5 | `docs/CODEX_HANDOFF_2026-08-18.md` | 작업 지시서(무엇을 하지 말아야 하는지 포함) |
 
 **아이디어 선정은 끝났다.** `ideation/`은 이제 결정 기록(왜 이걸 골랐고 무엇을 죽였는지)이지
@@ -21,7 +21,7 @@ Claude Code와 Codex는 **대화를 공유하지 못한다**(각자 자기 세�
 따라서 **이 레포의 파일이 유일한 공용 메모리**다.
 
 ```
-Claude Code  →  docs/SESSION_LATEST.md 로 자기 작업 내역을 내보냄
+Claude Code  →  private/docs/SESSION_LATEST.md (비공개) 로 자기 작업 내역을 내보냄
              →  결론은 ideation/*.md, 상태는 docs/CURRENT_STATE.md 에 기록
 Codex        →  위 파일들을 읽고 이어서 작업, 결과를 다시 ideation/*.md 에 기록
 ```
@@ -29,7 +29,7 @@ Codex        →  위 파일들을 읽고 이어서 작업, 결과를 다시 ide
 **세션 로그 갱신 명령** (Claude 쪽 작업 후 실행):
 
 ```bash
-python3 tools/export-claude-session.py       # → docs/SESSION_LATEST.md 재생성
+python3 private/tools/export-claude-session.py (비공개)       # → private/docs/SESSION_LATEST.md (비공개) 재생성
 ```
 
 이 스크립트는 `contracts/.env`의 개인키가 산출물에 섞이면 **쓰기를 거부**한다(키는 출력하지 않음).

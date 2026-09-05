@@ -3,7 +3,7 @@
 > Status: **KILLED** 2026-08-17, confirmed by the user.
 > Purpose: preserve the evidence so this idea is not silently revived, and so the *reusable*
 > parts of the research are not lost.
-> Supersedes the "SURVIVOR" status recorded in `BUIDL_CTC_2026_FALL_AGENT_BRIEF.md` §8 and §10.
+> Supersedes the "SURVIVOR" status recorded in `BUIDL_CTC_2026_FALL_AGENT_BRIEF.md` (비공개 작업 문서, 저장소 밖) §8 and §10.
 
 ---
 
