@@ -9,7 +9,7 @@
 | 1 | **`docs/CURRENT_STATE.md`** | **지금 무엇이 정해졌고 무엇이 대기 중인지. 항상 최신** |
 | 2 | `README.md` (루트) | 제출용 개요 — 실주소·재현절차·한계·prior art |
 | 3 | `docs/SUBMISSION.md` | 제출 패키지 — 제출폼 텍스트, 데모 영상 대본, 사람이 해야 할 일 |
-| 4 | `private/private/docs/SESSION_LATEST.md (비공개)` (비공개, 저장소 밖) | Claude Code 세션 전문(도구 호출·실행 결과 포함). 근거 추적용 |
+| 4 | `private/docs/SESSION_LATEST.md (비공개)` (비공개, 저장소 밖) | Claude Code 세션 전문(도구 호출·실행 결과 포함). 근거 추적용 |
 | 5 | `docs/CODEX_HANDOFF_2026-08-18.md` | 작업 지시서(무엇을 하지 말아야 하는지 포함) |
 
 **아이디어 선정은 끝났다.** `ideation/`은 이제 결정 기록(왜 이걸 골랐고 무엇을 죽였는지)이지
@@ -62,3 +62,10 @@ python3 private/tools/export-claude-session.py (비공개)       # → private/d
 - 아이디어가 확정되기 전에는 **새 컨트랙트를 쓰지 말 것.**
 - `contracts/` 기존 코드를 수정하지 말 것 — 재사용 여부는 아이디어 확정 후 결정한다.
 - 커밋·푸시는 **사용자가 명시적으로 지시할 때만.** 원격은 `kimsabin725/collateral-eligibility-ledger`(공개).
+
+## 공개 저장소 규칙
+
+이 저장소는 **공개**다. 커밋 전에 다음을 지킨다.
+- 작업 노트·세션 덤프·제출 입력값·개인 연락처·소속·목적 서술은 `private/`에 둔다. `private/`는 전역 gitignore로 추적되지 않는다
+- 저장소에 남는 문서는 프로젝트가 **무엇을 어떻게 만들었는지**만 말한다. 왜 만들었는지(진로·회사)는 쓰지 않는다
+- push 시 전역 pre-push 훅(`~/.config/git/hooks/pre-push`)이 `~/.config/git/leak-blocklist.txt`로 검사한다. 걸리면 올리지 말고 고친다

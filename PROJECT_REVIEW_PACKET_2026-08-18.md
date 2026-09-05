@@ -510,7 +510,7 @@ Centrifuge V3는 hub에서 가격·상태를 **모든 네트워크로 배포**�
 
 ## 원문 세션에서 재검토할 대목
 
-- `private/private/docs/SESSION_LATEST.md (비공개)` (비공개, 저장소 밖) — 전체 도구 호출 로그(223건). 특히:
+- `private/docs/SESSION_LATEST.md (비공개)` (비공개, 저장소 밖) — 전체 도구 호출 로그(223건). 특히:
   - Attestcoin OpenAPI 전수 확인 대목 (설계 최상위 제약의 출처)
   - USDe OFT 판정 대목 (Condition 1의 결정적 근거)
   - USDT 전수 디코딩 대목 (가설 폐기의 근거)
