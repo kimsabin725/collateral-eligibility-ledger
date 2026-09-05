@@ -89,7 +89,7 @@ C·D는 **애플리케이션 코드에 도달하지도 못한다** — Creditcoi
 | 제출 입력값 전문 | `docs/DORAHACKS_SUBMISSION_INPUTS.md` |
 
 **심사 전까지 수정 가능하다**("You can still edit this BUIDL before judging").
-미확인 항목 2개: 이메일 칸이 개인 주소(`kimsabin725@naver.com`)인지, Vision 256자 요약본 내용.
+미확인 항목 1개: Vision 256자 요약본 내용.
 
 
 ⚠️ `deploy-eligibility.js`를 다시 돌리면 **새 주소로 재배포되고 `deployment.json`이 덮어써진다.**
