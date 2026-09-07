@@ -228,6 +228,61 @@ async function main() {
   const exposed = await read(line, gIface, 'exposedPositions', [COLL]);
   check('exposedPositions lists open debt', exposed.length === 1, `count=${exposed.length}`);
 
+  console.log('\n— recurrence and source-position ordering regressions —');
+  await call(verifier, vIface, 'setTxIndex', [12]);
+  await submit(CHAIN_KEY_MAINNET, PAUSE_BLOCK + 2000n, receipt([evLog(COLL, PAUSED)]));
+  check('pause after restoration gates credit again',
+    await read(ledger, lIface, 'isCreditGated', [COLL]) === true);
+  check('recurrence preserves earliest historical cutoff',
+    await read(ledger, lIface, 'impairedSince', [COLL]) === PAUSE_BLOCK - 100n);
+  r = await call(line, gIface, 'borrowMore', [1, E18], { expectRevert: true });
+  check('recurrent impairment refuses additional borrowing', r.error === 'AssetImpaired');
+  await call(verifier, vIface, 'setTxIndex', [13]);
+  await submit(CHAIN_KEY_MAINNET, PAUSE_BLOCK + 1500n, receipt([evLog(COLL, UNPAUSED)]));
+  check('delayed old restoration cannot reopen credit',
+    await read(ledger, lIface, 'isCreditGated', [COLL]) === true);
+
+  // All delivery permutations must converge, both when the last source event is a pause
+  // and when it is a restoration. Each uses an independent registered asset.
+  const permutations = [[0,1,2], [0,2,1], [1,0,2], [1,2,0], [2,0,1], [2,1,0]];
+  let assetId = 100;
+  for (const signatures of [[PAUSED, UNPAUSED, PAUSED], [PAUSED, PAUSED, UNPAUSED]]) {
+    for (const order of permutations) {
+      const asset = ethers.getAddress('0x' + (++assetId).toString(16).padStart(40, '0'));
+      await call(ledger, lIface, 'registerAsset', [asset, CHAIN_KEY_MAINNET, 'Ordering regression']);
+      await call(verifier, vIface, 'setTxIndex', [assetId]);
+      for (const n of order) {
+        await submit(CHAIN_KEY_MAINNET, 100n + BigInt(n * 100), receipt([evLog(asset, signatures[n])]));
+      }
+      check(`delivery ${order.join('')} converges (${signatures[2] === PAUSED ? 'impaired' : 'restored'})`,
+        Number(await read(ledger, lIface, 'statusOf', [asset])) === (signatures[2] === PAUSED ? 1 : 2)
+        && await read(ledger, lIface, 'impairedSince', [asset]) === 100n);
+    }
+  }
+  const ordered = ethers.getAddress('0x' + (1000).toString(16).padStart(40, '0'));
+  await call(ledger, lIface, 'registerAsset', [ordered, CHAIN_KEY_MAINNET, 'Same block']);
+  await call(verifier, vIface, 'setTxIndex', [30]);
+  await submit(CHAIN_KEY_MAINNET, 500n, receipt([evLog(ordered, UNPAUSED)]));
+  check('restoration alone is still NO_PROOF', Number(await read(ledger, lIface, 'statusOf', [ordered])) === 0);
+  await call(verifier, vIface, 'setTxIndex', [20]);
+  await submit(CHAIN_KEY_MAINNET, 500n, receipt([evLog(ordered, PAUSED)]));
+  check('same-block earlier pause delivered late preserves later restoration',
+    Number(await read(ledger, lIface, 'statusOf', [ordered])) === 2);
+  await call(verifier, vIface, 'setTxIndex', [40]);
+  await submit(CHAIN_KEY_MAINNET, 500n, receipt([evLog(ordered, PAUSED)]));
+  check('same-block later transaction gates again', await read(ledger, lIface, 'isCreditGated', [ordered]) === true);
+  await call(verifier, vIface, 'setTxIndex', [50]);
+  await submit(CHAIN_KEY_MAINNET, 500n, receipt([evLog(ordered, PAUSED), evLog(ordered, UNPAUSED)]));
+  check('same-transaction pause then restoration restores', Number(await read(ledger, lIface, 'statusOf', [ordered])) === 2);
+  await call(verifier, vIface, 'setTxIndex', [60]);
+  await submit(CHAIN_KEY_MAINNET, 500n, receipt([evLog(ordered, UNPAUSED), evLog(ordered, PAUSED)]));
+  check('same-transaction restoration then pause gates', await read(ledger, lIface, 'isCreditGated', [ordered]) === true);
+  const position = await call(ledger, lIface, 'latestEvents', [ordered]);
+  const latest = lIface.decodeFunctionResult('latestEvents', position.ret);
+  check('latest position exposes verified transaction and receipt log index', latest.txIndex === 60n && latest.logIndex === 1n);
+  r = await call(ledger, lIface, 'registerAsset', [ordered, CHAIN_KEY_SEPOLIA, 'Wrong chain'], { expectRevert: true });
+  check('asset cannot switch source chains while retaining old history', r.error === 'WrongChainKey');
+
   const passed = results.filter((x) => x.pass).length;
   console.log(`\n${passed}/${results.length} checks passed`);
   if (passed !== results.length) process.exit(1);
