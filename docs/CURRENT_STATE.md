@@ -15,11 +15,10 @@ submitEvent tx     0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff
 ```
 
 배포 지갑은 동일(`0xDd9ddFcEb1dc1dC0aE393DD458Fe376aaB60294a`), 잔액 약 9,999 CTC.
-`docs/deck.html`/`deck.pdf`는 2026-09-07에 이 주소로 갱신했다.
-**데모 영상만 패치 전 배포(아래 8월 기록)를 찍은 것이다 — 영상은 이전 버전 시연이다.**
-두 배포 모두 온체인에 남아 있다. 패치본이 실제로 무엇을 하는지는
+`docs/deck.html`/`deck.pdf`는 2026-09-07에 이 주소로 갱신했다. 데모 영상은 8월 배포로 녹화된 그대로 둔다
+(같은 메커니즘을 보여주고, 현 배포의 온체인 근거는 검증 기록이 대신한다). 두 배포 모두 온체인에 남아 있다. 패치본이 실제로 무엇을 하는지는
 `docs/transcripts/verify-cc3-2026-09-07.log`(라이브 주소에 대한 읽기 전용 조회)에 남겼고,
-`contracts/`에서 `node scripts/verify-deployment.js`로 재현된다. 영상과 함께 보는 보완 자료다.
+`contracts/`에서 `node scripts/verify-deployment.js`로 재현된다.
 디코더는 패치 영향이 없다 — 구 `0xd735…F008`과 신 `0x0071…d97`의 런타임 코드가 바이트 단위로 같아
 구 배포를 그대로 재사용할 수 있었다. 패치본 세트를 자체 완결로 두려고 새로 배포했을 뿐이다.
 
@@ -32,7 +31,7 @@ submitEvent tx     0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff
 CC3 온체인에서 신규 여신을 차단하는 것까지 실제로 작동한다. 남은 것은 발표 산출물뿐이다.
 
 ```
-EligibilityLedger  0xA47a20079112252afAF2d54fF1FF0268bE3826a4      ← 패치 전(2026-08-22). 데모 영상이 보여주는 배포
+EligibilityLedger  0xA47a20079112252afAF2d54fF1FF0268bE3826a4      ← 패치 전(2026-08-22)
 GatedCreditLine    0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
 EvmV1Decoder       0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008
 submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df  (gas 346,458)
@@ -108,7 +107,7 @@ C·D는 **애플리케이션 코드에 도달하지도 못한다** — Creditcoi
 | DoraHacks 제출 | ✅ "BUIDL Submitted" — under review |
 | GitHub (공개) | https://github.com/kimsabin725/collateral-eligibility-ledger |
 | 덱 PDF | `docs/deck.pdf` (8장) |
-| 데모 영상 | https://youtu.be/9gG6zEujYBA (2:36, 본인 나레이션) — **패치 전(2026-08-22) 배포 시연**. 보완 자료: `docs/transcripts/verify-cc3-2026-09-07.log` |
+| 데모 영상 | https://youtu.be/9gG6zEujYBA (2:36, 본인 나레이션) |
 | 트랙 | RWA / DeFi |
 | 제출 입력값 전문 | `private/docs/DORAHACKS_SUBMISSION_INPUTS.md` (비공개, 저장소 밖) |
 
