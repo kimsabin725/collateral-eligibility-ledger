@@ -10,14 +10,17 @@
 (sNUSD `Paused`, block 25,745,732) was proven with Attestcoin, admitted by the on-chain ledger, and
 gates new credit — plus a read-only demo showing four forgeries rejected on-chain.
 
-Local regression: **60/60**. No technical blocker remains; only the deck and demo video are left.
+Local regression: **83/83** (2026-09-07 ordering patch included).
 
 | Contract | Address |
 |---|---|
-| `EligibilityLedger` | `0xA47a20079112252afAF2d54fF1FF0268bE3826a4` |
-| `GatedCreditLine` | `0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb` |
-| `EvmV1Decoder` | `0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008` |
-| admitting tx | `0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df` |
+| `EligibilityLedger` | `0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32` |
+| `GatedCreditLine` | `0xDcd5dfb82CA8fcDD3E628b327d5CeaCdBE69771A` |
+| `EvmV1Decoder` | `0x00718d01897236C3352D5BA689BcC5c540dd9d97` |
+| admitting tx | `0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff2461c` |
+
+Pre-patch deployment (2026-08-22 — what the video and deck show): ledger `0xA47a20079112252afAF2d54fF1FF0268bE3826a4`,
+credit line `0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb`, decoder `0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008`, admitting tx `0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df`.
 
 ## Read these three first
 

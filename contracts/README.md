@@ -16,13 +16,13 @@ Scope and claims are frozen in [`../docs/BUILD_SPEC_V2.md`](../docs/BUILD_SPEC_V
 npm install
 node scripts/compile.js        # npm solc — no system toolchain required
 
-node test/eligibility.test.js            # 27/27  EligibilityLedger + GatedCreditLine
+node test/eligibility.test.js            # 50/50  EligibilityLedger + GatedCreditLine
 node test/realdata-eligibility.test.js   # 10/10  REAL mainnet proof + REAL decoder
 node test/ledger.test.js                 # 15/15  VaultAuthorityLedger regression
 node test/realdata.test.js               #  8/8   REAL proofs, two more transactions
 ```
 
-**60/60.** The real-data suites fetch live Attestcoin proofs for real Ethereum mainnet transactions
+**83/83** (2026-09-07). The real-data suites fetch live Attestcoin proofs for real Ethereum mainnet transactions
 and run them through the real `EvmV1Decoder`. Only the BlockProver precompile is mocked, because it
 is a Creditcoin runtime component that cannot exist on a local EVM — and the live scripts below
 exercise the real one.

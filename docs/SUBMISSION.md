@@ -22,21 +22,28 @@ Everything DoraHacks asks for, ready to paste. Deadline **2026-09-06 13:59 KST**
 Network        Creditcoin CC3 Testnet (chain id 102031)
 Explorer       https://creditcoin3-testnet.subscan.io/
 
-EligibilityLedger   0xA47a20079112252afAF2d54fF1FF0268bE3826a4
-GatedCreditLine     0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
-EvmV1Decoder        0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008
+EligibilityLedger   0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32
+GatedCreditLine     0xDcd5dfb82CA8fcDD3E628b327d5CeaCdBE69771A
+EvmV1Decoder        0x00718d01897236C3352D5BA689BcC5c540dd9d97
 BlockProver         0x0000000000000000000000000000000000000FD2   (runtime precompile)
 
-Proof-admitting tx  0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df
+Proof-admitting tx  0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff2461c
 Source event        sNUSD Paused() · Ethereum mainnet block 25,745,732
 ```
 
+Pre-patch deployment (2026-08-22) — the addresses the demo video and `deck.pdf` show:
+```
+EligibilityLedger   0xA47a20079112252afAF2d54fF1FF0268bE3826a4
+GatedCreditLine     0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
+EvmV1Decoder        0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008
+Proof-admitting tx  0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df   (346,458 gas)
+```
+
 > ⚠️ **Re-running `deploy-eligibility.js` deploys fresh contracts and overwrites
-> `contracts/deployment.json` with new addresses.** If you re-run it — for the video, for instance —
-> the addresses above become stale in **four places**: this file, `README.md`, `HANDOFF_MANIFEST.md`,
-> `docs/CURRENT_STATE.md`, and `docs/deck.html` (then re-export `deck.pdf`). Either record the video
-> against the existing deployment using `demo-rejections.js`, or re-run the deploy first and update
-> the docs afterwards.
+> `contracts/deployment.json` with new addresses.** It was last re-run on 2026-09-07 for the
+> ordering patch; the addresses above were updated in this file, `README.md`, `HANDOFF_MANIFEST.md`
+> and `docs/CURRENT_STATE.md`. `docs/deck.html`/`deck.pdf` and the demo video still show the
+> pre-patch deployment and were left as recorded. If you re-run it again, update those places.
 
 ---
 
@@ -91,8 +98,8 @@ ingests.**
 The ledger keeps the earliest proven impairment as the cutoff, so a late-arriving proof can never
 retroactively bless credit extended after the real event. Current status follows the latest proven source
 position (block, transaction index, receipt log index); a recurring impairment gates credit again.
-Restoration received first is retained, but alone leaves NO_PROOF. These ordering fixes are local
-as of 2026-09-07; the published deployment addresses still run the original version. And once an asset is impaired, `repay` and
+Restoration received first is retained, but alone leaves NO_PROOF. These ordering fixes were
+deployed on 2026-09-07 and the addresses above run them. And once an asset is impaired, `repay` and
 `withdrawCollateral` stay open forever — only new exposure is refused. A risk control that also blocks
 the exit is not a control.
 
