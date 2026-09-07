@@ -171,7 +171,7 @@
     <div>
       <span class="chip v">Live on CC3 Testnet</span>
       <p class="mono" style="font-size:12px; margin-top:12px; color:var(--soft)">
-        EligibilityLedger &nbsp;0xA47a20079112252afAF2d54fF1FF0268bE3826a4<br>
+        EligibilityLedger &nbsp;0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32<br>
         Real event ingested &nbsp;sNUSD <code>Paused</code> · Ethereum block 25,745,732
       </p>
     </div>
@@ -372,12 +372,18 @@
     <div>
       <table>
         <tr><th>Contract</th><th>Address on CC3 Testnet</th></tr>
-        <tr><td>EligibilityLedger</td><td class="mono">0xA47a20079112252afAF2d54fF1FF0268bE3826a4</td></tr>
-        <tr><td>GatedCreditLine</td><td class="mono">0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb</td></tr>
-        <tr><td>EvmV1Decoder <span style="color:var(--soft)">(our build)</span></td><td class="mono">0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008</td></tr>
+        <tr><td>EligibilityLedger</td><td class="mono">0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32</td></tr>
+        <tr><td>GatedCreditLine</td><td class="mono">0xDcd5dfb82CA8fcDD3E628b327d5CeaCdBE69771A</td></tr>
+        <tr><td>EvmV1Decoder <span style="color:var(--soft)">(our build)</span></td><td class="mono">0x00718d01897236C3352D5BA689BcC5c540dd9d97</td></tr>
         <tr><td>BlockProver precompile</td><td class="mono">0x0000000000000000000000000000000000000FD2</td></tr>
-        <tr><td>Admitting transaction</td><td class="mono">0xbf8bda4f…c68da4df &nbsp;· 346,458 gas</td></tr>
+        <tr><td>Admitting transaction</td><td class="mono">0xeca0db64…1ff2461c &nbsp;· 346,598 gas</td></tr>
       </table>
+      <p style="margin-top:12px; font-size:13px; color:var(--soft)">
+        Addresses from the 2026-09-07 redeploy. The demo video was recorded on the 2026-08-22
+        deployment (ledger <span class="mono">0xA47a…26a4</span>), which is still readable on-chain;
+        the patched deployment is re-verified in
+        <span class="mono">docs/transcripts/verify-cc3-2026-09-07.log</span>.
+      </p>
       <p style="margin-top:18px; font-size:14px">
         We deploy our own decoder because the one listed on the official chains &amp; environments page is
         an older build missing <code>getLogsByEventSignature</code>.
@@ -387,11 +393,11 @@
       <div class="panel" style="margin-bottom:16px">
         <h3>Local regression</h3>
         <table style="font-size:13px">
-          <tr><td>eligibility.test.js</td><td class="n yes">27 / 27</td></tr>
+          <tr><td>eligibility.test.js</td><td class="n yes">50 / 50</td></tr>
           <tr><td>realdata-eligibility.test.js</td><td class="n yes">10 / 10</td></tr>
           <tr><td>ledger.test.js <span style="color:var(--soft)">(v1 regression)</span></td><td class="n yes">15 / 15</td></tr>
           <tr><td>realdata.test.js</td><td class="n yes">8 / 8</td></tr>
-          <tr><td style="border:0"><b>Total</b></td><td class="n yes" style="border:0">60 / 60</td></tr>
+          <tr><td style="border:0"><b>Total</b></td><td class="n yes" style="border:0">83 / 83</td></tr>
         </table>
       </div>
       <p style="font-size:14px">

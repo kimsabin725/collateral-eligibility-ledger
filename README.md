@@ -20,9 +20,9 @@ flips the asset's eligibility, and gates **new** credit against it — while nev
 
 **2026-09-07 patch — redeployed.** The addresses below run the patched contracts, which fix
 recurrent impairment and source-event ordering. See [`docs/PATCH_2026-09-07.md`](docs/PATCH_2026-09-07.md).
-The demo video and `docs/deck.pdf` were recorded against the pre-patch deployment, whose addresses
-are listed at the bottom of this section; both deployments remain readable on-chain. **The video
-therefore demonstrates the earlier version.** What the patched deployment does on-chain is recorded
+`docs/deck.html`/`deck.pdf` carry these addresses. **The demo video does not — it was recorded
+against the pre-patch deployment and therefore demonstrates the earlier version.** Those addresses
+are listed at the bottom of this section; both deployments remain readable on-chain. What the patched deployment does on-chain is recorded
 in [`docs/transcripts/verify-cc3-2026-09-07.log`](docs/transcripts/verify-cc3-2026-09-07.log) —
 read-only queries against the live addresses, reproducible with `node scripts/verify-deployment.js`
 from `contracts/`. Read it alongside the video.
