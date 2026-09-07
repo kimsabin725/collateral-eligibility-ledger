@@ -19,7 +19,7 @@ Local regression: **83/83** (2026-09-07 ordering patch included).
 | `EvmV1Decoder` | `0x00718d01897236C3352D5BA689BcC5c540dd9d97` |
 | admitting tx | `0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff2461c` |
 
-Pre-patch deployment (2026-08-22 — what the video and deck show): ledger `0xA47a20079112252afAF2d54fF1FF0268bE3826a4`,
+Pre-patch deployment (2026-08-22 — what the demo video shows; the deck was updated): ledger `0xA47a20079112252afAF2d54fF1FF0268bE3826a4`,
 credit line `0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb`, decoder `0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008`, admitting tx `0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df`.
 The decoder was not touched by the patch — both decoder deployments have byte-identical runtime code,
 so the pre-patch one is reusable. What the patched deployment does on-chain is recorded in

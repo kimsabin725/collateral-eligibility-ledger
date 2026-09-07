@@ -37,7 +37,7 @@ from `contracts/`. This is the supplementary record to read next to the demo vid
 recorded against the earlier version. The decoder is unaffected by the patch: `0xd735…F008` and
 `0x0071…d97` have byte-identical runtime code, so either address works.
 
-Pre-patch deployment (2026-08-22) — the addresses the demo video and `deck.pdf` show:
+Pre-patch deployment (2026-08-22) — the addresses the demo video shows:
 ```
 EligibilityLedger   0xA47a20079112252afAF2d54fF1FF0268bE3826a4
 GatedCreditLine     0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
@@ -48,8 +48,8 @@ Proof-admitting tx  0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec6
 > ⚠️ **Re-running `deploy-eligibility.js` deploys fresh contracts and overwrites
 > `contracts/deployment.json` with new addresses.** It was last re-run on 2026-09-07 for the
 > ordering patch; the addresses above were updated in this file, `README.md`, `HANDOFF_MANIFEST.md`
-> and `docs/CURRENT_STATE.md`. `docs/deck.html`/`deck.pdf` and the demo video still show the
-> pre-patch deployment and were left as recorded. If you re-run it again, update those places.
+> and `docs/CURRENT_STATE.md`. `docs/deck.html`/`deck.pdf` were updated too. Only the demo
+> video still shows the pre-patch deployment. If you re-run it again, update all of those places.
 
 ---
 
@@ -208,13 +208,15 @@ outside it and has to be edited by hand.
 3. Field-by-field original inputs are in `private/docs/DORAHACKS_SUBMISSION_INPUTS.md` (kept outside
    this repo).
 
-### Deck (`docs/deck.html` → `docs/deck.pdf`)
+### Deck (`docs/deck.html` → `docs/deck.pdf`) — done 2026-09-07
 
-4. **Two places carry the old ledger address**: the "Live on CC3 Testnet" chip and the addresses
-   table on the closing slide. Changing them makes the deck disagree with the video; leaving them
-   makes it disagree with the repo. Recommended: update the table to the patched addresses and add a
-   one-line footnote that the video was recorded on the earlier deployment.
-5. Re-export the PDF after any edit:
+4. ✅ Both places that carried the old ledger address — the "Live on CC3 Testnet" chip and the
+   addresses table on the closing slide — now show the patched set, with a footnote saying the demo
+   video was recorded on the 2026-08-22 deployment and pointing at the verification transcript. The
+   local-regression table was 27/27 and 60/60; it now reads 50/50 and 83/83. `deck.pdf` was
+   re-exported (8 pages). **Left to do by hand: skim the PDF once**, and re-host it if the
+   submission links to a copy somewhere other than this repo.
+5. Re-export the PDF after any further edit:
    ```bash
    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
      --no-pdf-header-footer --print-to-pdf=docs/deck.pdf --virtual-time-budget=8000 \

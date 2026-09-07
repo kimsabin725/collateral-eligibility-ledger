@@ -15,7 +15,8 @@ submitEvent tx     0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff
 ```
 
 배포 지갑은 동일(`0xDd9ddFcEb1dc1dC0aE393DD458Fe376aaB60294a`), 잔액 약 9,999 CTC.
-**데모 영상과 `docs/deck.pdf`는 패치 전 배포(아래 8월 기록)를 찍은 것이다 — 영상은 이전 버전 시연이다.**
+`docs/deck.html`/`deck.pdf`는 2026-09-07에 이 주소로 갱신했다.
+**데모 영상만 패치 전 배포(아래 8월 기록)를 찍은 것이다 — 영상은 이전 버전 시연이다.**
 두 배포 모두 온체인에 남아 있다. 패치본이 실제로 무엇을 하는지는
 `docs/transcripts/verify-cc3-2026-09-07.log`(라이브 주소에 대한 읽기 전용 조회)에 남겼고,
 `contracts/`에서 `node scripts/verify-deployment.js`로 재현된다. 영상과 함께 보는 보완 자료다.
@@ -31,7 +32,7 @@ submitEvent tx     0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff
 CC3 온체인에서 신규 여신을 차단하는 것까지 실제로 작동한다. 남은 것은 발표 산출물뿐이다.
 
 ```
-EligibilityLedger  0xA47a20079112252afAF2d54fF1FF0268bE3826a4      ← 패치 전(2026-08-22). 영상·덱이 보여주는 배포
+EligibilityLedger  0xA47a20079112252afAF2d54fF1FF0268bE3826a4      ← 패치 전(2026-08-22). 데모 영상이 보여주는 배포
 GatedCreditLine    0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
 EvmV1Decoder       0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008
 submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df  (gas 346,458)
