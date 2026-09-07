@@ -18,6 +18,10 @@ flips the asset's eligibility, and gates **new** credit against it — while nev
 
 ## Live on CC3 Testnet
 
+**2026-09-07 patch:** the addresses below run the original version. The local source now fixes
+recurrent impairment and source-event ordering; it has not been redeployed. See
+[`docs/PATCH_2026-09-07.md`](docs/PATCH_2026-09-07.md).
+
 | Contract | Address |
 |---|---|
 | `EligibilityLedger` | [`0xA47a20079112252afAF2d54fF1FF0268bE3826a4`](https://creditcoin3-testnet.subscan.io/account/0xA47a20079112252afAF2d54fF1FF0268bE3826a4) |
@@ -100,13 +104,13 @@ cd contracts
 npm install
 node scripts/compile.js            # npm solc — no system toolchain needed
 
-node test/eligibility.test.js      # 27/27  application logic, local EVM
+node test/eligibility.test.js      # 50/50  application logic, local EVM
 node test/ledger.test.js           # 15/15  v1 regression (proof plumbing)
 node test/realdata-eligibility.test.js   # 10/10  REAL mainnet proof + REAL decoder
 node test/realdata.test.js         #  8/8   REAL proofs, two more mainnet transactions
 ```
 
-**60/60.** Only the BlockProver precompile is mocked locally — it is a Creditcoin runtime component
+**83/83 (2026-09-07).** Only the BlockProver precompile is mocked locally — it is a Creditcoin runtime component
 that cannot exist on a local EVM, and it is exercised for real by the two scripts below.
 
 Against the live chain (needs a funded deployer — see [`contracts/README.md`](contracts/README.md)):
@@ -140,8 +144,11 @@ properties are pinned by tests.
 **Earliest proven impairment wins.** If several impairment proofs arrive, the ledger keeps the
 *earliest* proven source block as the cutoff; a later proof can never push it forward. Credit
 extended after the real impairment does not become sound merely because the proof arrived late.
-Ignored events are still recorded (`EventIgnored`) rather than silently dropped. Restoration only
-counts if an impairment was proven first and the restoration is strictly later.
+Current status follows the latest proven source position (block, transaction index, receipt log
+index), independently of that historical cutoff. A new impairment after restoration gates credit
+again. Older events remain in history. Restoration proofs received first are retained; status
+stays NO_PROOF until an impairment is also proven. Proof delivery order does not affect the final
+status for the same set of proven events. This does not prove a complete event history.
 
 ---
 
@@ -174,7 +181,7 @@ Full limitation list and the prior-art assessment: [`CROSS_CHAIN_COLLATERAL_ELIG
 
 | Path | What is in it |
 |---|---|
-| `contracts/src/EligibilityLedger.sol` | The ledger — five checks, earliest-impairment cutoff, restoration ordering (7,431 bytes) |
+| `contracts/src/EligibilityLedger.sol` | The ledger — five checks, earliest-impairment cutoff, restoration ordering (7,177 bytes) |
 | `contracts/src/GatedCreditLine.sol` | The credit venue that reads the ledger; exits never gated (5,007 bytes) |
 | `contracts/src/vendor/EvmV1Decoder.sol` | Vendored from `@gluwa/usc-contracts@0.1.2`; we deploy our own because the officially listed decoder is an older build missing `getLogsByEventSignature` |
 | `contracts/scripts/deploy-eligibility.js` | One command: deploy → configure → fetch real proof → ingest → show the gate refuse |

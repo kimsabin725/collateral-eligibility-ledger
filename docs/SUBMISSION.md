@@ -89,8 +89,10 @@ decision* — nothing propagated automatically. **That is the transaction our de
 ingests.**
 
 The ledger keeps the earliest proven impairment as the cutoff, so a late-arriving proof can never
-retroactively bless credit extended after the real event. Restoration counts only if an impairment was
-proven first and the restoration is strictly later. And once an asset is impaired, `repay` and
+retroactively bless credit extended after the real event. Current status follows the latest proven source
+position (block, transaction index, receipt log index); a recurring impairment gates credit again.
+Restoration received first is retained, but alone leaves NO_PROOF. These ordering fixes are local
+as of 2026-09-07; the published deployment addresses still run the original version. And once an asset is impaired, `repay` and
 `withdrawCollateral` stay open forever — only new exposure is refused. A risk control that also blocks
 the exit is not a control.
 

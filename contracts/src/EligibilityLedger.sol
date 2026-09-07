@@ -65,8 +65,17 @@ contract EligibilityLedger {
         bool registered;
         uint64 chainKey;      // Attestcoin source-chain id the asset lives on
         uint64 impairedAt;    // EARLIEST proven impairment block (0 = none)
-        uint64 restoredAt;    // proven restoration block, strictly later than impairedAt
+        uint64 restoredAt;    // latest proven restoration block (may precede latest impairment)
         string label;
+    }
+
+    struct LatestEvent {
+        bool seen;
+        bool hasImpairment;
+        bool impairment;
+        uint64 blockHeight;
+        uint64 txIndex;
+        uint256 logIndex;
     }
 
     struct Event {
@@ -91,6 +100,7 @@ contract EligibilityLedger {
     /// @dev Emitter allowlist. Without it anyone deploys a look-alike contract, emits Paused, and
     ///      proves it. This is the single most important check in the pipeline.
     mapping(address => Asset) public assets;
+    mapping(address => LatestEvent) public latestEvents;
 
     /// @dev Which source-chain event signatures count as impairment / restoration.
     mapping(bytes32 => bool) public impairmentSig;
@@ -133,6 +143,9 @@ contract EligibilityLedger {
         external onlyOwner
     {
         Asset storage a = assets[asset];
+        if (a.registered && a.chainKey != chainKey) {
+            revert WrongChainKey(asset, a.chainKey, chainKey);
+        }
         a.registered = true;
         a.chainKey = chainKey;
         a.label = label;
@@ -163,7 +176,7 @@ contract EligibilityLedger {
         bytes32 lowerEndpointDigest,
         bytes32[] calldata continuityRoots
     ) external returns (uint256 count) {
-        IEvmDecoder.ReceiptFields memory receipt = _verify(
+        (IEvmDecoder.ReceiptFields memory receipt, uint64 txIndex) = _verify(
             chainKey, blockHeight, encodedTransaction,
             merkleRoot, siblings, lowerEndpointDigest, continuityRoots);
 
@@ -183,11 +196,7 @@ contract EligibilityLedger {
             // naming the same address is a different contract and must not move this state.
             if (a.chainKey != chainKey) revert WrongChainKey(log.address_, a.chainKey, chainKey);
 
-            if (isImpair) {
-                _recordImpairment(a, log.address_, sig, chainKey, blockHeight);
-            } else {
-                _recordRestoration(a, log.address_, sig, chainKey, blockHeight);
-            }
+            _recordEvent(a, log.address_, sig, isImpair, blockHeight, txIndex, i);
             unchecked { ++count; }
         }
         if (count == 0) revert NoMatchingEvent();
@@ -195,45 +204,36 @@ contract EligibilityLedger {
 
     // ──────────────────────────── state machine ──────────────────────────
 
-    function _recordImpairment(
-        Asset storage a, address asset, bytes32 sig, uint64 chainKey, uint64 blockHeight
+    /// @dev Historical cutoff and current status have separate ordering rules. Retain even a
+    ///      restoration received first, so proof delivery order cannot change the final status.
+    function _recordEvent(
+        Asset storage a, address asset, bytes32 sig, bool impairment,
+        uint64 blockHeight, uint64 txIndex, uint256 logIndex
     ) internal {
-        uint256 id = _append(asset, sig, true, chainKey, blockHeight);
-
-        // Keep the EARLIEST proven impairment. A later proof must never push the cutoff forward:
-        // credit extended after the first impairment was already extended against an impaired
-        // asset, whether or not anyone had proven it yet.
-        if (a.impairedAt == 0 || blockHeight < a.impairedAt) {
-            a.impairedAt = blockHeight;
-            // A restoration only survives if it is still strictly later than the impairment.
-            if (a.restoredAt != 0 && a.restoredAt <= blockHeight) a.restoredAt = 0;
-            emit Impaired(asset, sig, blockHeight, id);
-        } else {
-            emit EventIgnored(asset, sig, blockHeight, "later than earliest proven impairment");
+        uint256 id = _append(asset, sig, impairment, a.chainKey, blockHeight);
+        LatestEvent storage latest = latestEvents[asset];
+        if (impairment) {
+            if (!latest.hasImpairment || blockHeight < a.impairedAt) a.impairedAt = blockHeight;
+            latest.hasImpairment = true;
+        } else if (blockHeight > a.restoredAt) {
+            a.restoredAt = blockHeight;
         }
-    }
 
-    function _recordRestoration(
-        Asset storage a, address asset, bytes32 sig, uint64 chainKey, uint64 blockHeight
-    ) internal {
-        uint256 id = _append(asset, sig, false, chainKey, blockHeight);
-
-        // A restoration means nothing unless an impairment was proven first, and it must be
-        // strictly later than that impairment.
-        if (a.impairedAt == 0) {
-            emit EventIgnored(asset, sig, blockHeight, "no impairment proven");
+        // Position is derived from the verified proof and decoded receipt, never caller metadata.
+        bool newer = !latest.seen || blockHeight > latest.blockHeight ||
+            (blockHeight == latest.blockHeight && (txIndex > latest.txIndex ||
+                (txIndex == latest.txIndex && logIndex > latest.logIndex)));
+        if (!newer) {
+            emit EventIgnored(asset, sig, blockHeight, "older than latest proven event");
             return;
         }
-        if (blockHeight <= a.impairedAt) {
-            emit EventIgnored(asset, sig, blockHeight, "not later than impairment");
-            return;
-        }
-        if (a.restoredAt != 0 && blockHeight <= a.restoredAt) {
-            emit EventIgnored(asset, sig, blockHeight, "older than known restoration");
-            return;
-        }
-        a.restoredAt = blockHeight;
-        emit Restored(asset, sig, blockHeight, id);
+        latest.seen = true;
+        latest.impairment = impairment;
+        latest.blockHeight = blockHeight;
+        latest.txIndex = txIndex;
+        latest.logIndex = logIndex;
+        if (impairment) emit Impaired(asset, sig, blockHeight, id);
+        else emit Restored(asset, sig, blockHeight, id);
     }
 
     function _append(
@@ -258,7 +258,7 @@ contract EligibilityLedger {
         INativeQueryVerifier.MerkleProofEntry[] calldata siblings,
         bytes32 lowerEndpointDigest,
         bytes32[] calldata continuityRoots
-    ) internal returns (IEvmDecoder.ReceiptFields memory receipt) {
+    ) internal returns (IEvmDecoder.ReceiptFields memory receipt, uint64 txIndex) {
         INativeQueryVerifier.MerkleProof memory mp =
             INativeQueryVerifier.MerkleProof({root: merkleRoot, siblings: siblings});
         INativeQueryVerifier.ContinuityProof memory cp =
@@ -266,8 +266,8 @@ contract EligibilityLedger {
                 lowerEndpointDigest: lowerEndpointDigest, roots: continuityRoots});
 
         // (1) replay protection, keyed by position
-        bytes32 queryId = keccak256(
-            abi.encodePacked(chainKey, blockHeight, VERIFIER.calculateTxIndex(mp)));
+        txIndex = VERIFIER.calculateTxIndex(mp);
+        bytes32 queryId = keccak256(abi.encodePacked(chainKey, blockHeight, txIndex));
         if (processedQueries[queryId]) revert QueryAlreadyProcessed(queryId);
 
         // (2) inclusion + continuity
@@ -286,9 +286,9 @@ contract EligibilityLedger {
     /// @notice Current status of an asset.
     /// @dev NO_PROOF is not a clean bill of health — see the contract-level notice.
     function statusOf(address asset) public view returns (Status) {
-        Asset storage a = assets[asset];
-        if (a.impairedAt == 0) return Status.NO_PROOF;
-        if (a.restoredAt > a.impairedAt) return Status.RESTORED;
+        LatestEvent storage latest = latestEvents[asset];
+        if (!latest.hasImpairment) return Status.NO_PROOF;
+        if (!latest.impairment) return Status.RESTORED;
         return Status.IMPAIRED;
     }
 
