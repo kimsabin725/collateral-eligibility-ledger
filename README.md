@@ -18,20 +18,32 @@ flips the asset's eligibility, and gates **new** credit against it — while nev
 
 ## Live on CC3 Testnet
 
-**2026-09-07 patch:** the addresses below run the original version. The local source now fixes
-recurrent impairment and source-event ordering; it has not been redeployed. See
-[`docs/PATCH_2026-09-07.md`](docs/PATCH_2026-09-07.md).
+**2026-09-07 patch — redeployed.** The addresses below run the patched contracts, which fix
+recurrent impairment and source-event ordering. See [`docs/PATCH_2026-09-07.md`](docs/PATCH_2026-09-07.md).
+The demo video and `docs/deck.pdf` were recorded against the pre-patch deployment, whose addresses
+are listed at the bottom of this section; both deployments remain readable on-chain.
 
 | Contract | Address |
 |---|---|
-| `EligibilityLedger` | [`0xA47a20079112252afAF2d54fF1FF0268bE3826a4`](https://creditcoin3-testnet.subscan.io/account/0xA47a20079112252afAF2d54fF1FF0268bE3826a4) |
-| `GatedCreditLine` | [`0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb`](https://creditcoin3-testnet.subscan.io/account/0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb) |
-| `EvmV1Decoder` (our own build) | [`0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008`](https://creditcoin3-testnet.subscan.io/account/0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008) |
+| `EligibilityLedger` | [`0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32`](https://creditcoin3-testnet.subscan.io/account/0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32) |
+| `GatedCreditLine` | [`0xDcd5dfb82CA8fcDD3E628b327d5CeaCdBE69771A`](https://creditcoin3-testnet.subscan.io/account/0xDcd5dfb82CA8fcDD3E628b327d5CeaCdBE69771A) |
+| `EvmV1Decoder` (our own build) | [`0x00718d01897236C3352D5BA689BcC5c540dd9d97`](https://creditcoin3-testnet.subscan.io/account/0x00718d01897236C3352D5BA689BcC5c540dd9d97) |
 | BlockProver precompile | `0x0000000000000000000000000000000000000FD2` |
 
 **The proof-admitting transaction:**
-[`0xbf8bda4f…c68da4df`](https://creditcoin3-testnet.subscan.io/tx/0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df)
-— 346,458 gas. Chain id `102031`. Full record in [`contracts/deployment.json`](contracts/deployment.json).
+[`0xeca0db64…1ff2461c`](https://creditcoin3-testnet.subscan.io/tx/0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff2461c)
+— 346,598 gas. Chain id `102031`. Full record in [`contracts/deployment.json`](contracts/deployment.json).
+
+<details><summary>Pre-patch deployment (2026-08-22 — what the video and deck show)</summary>
+
+| Contract | Address |
+|---|---|
+| `EligibilityLedger` | `0xA47a20079112252afAF2d54fF1FF0268bE3826a4` |
+| `GatedCreditLine` | `0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb` |
+| `EvmV1Decoder` | `0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008` |
+| admitting tx | `0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df` (346,458 gas) |
+
+</details>
 
 ---
 

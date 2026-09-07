@@ -1,10 +1,21 @@
 # 현재 상태 — 항상 최신으로 유지하는 파일
 
-## 2026-09-07 로컬 패치 [VERIFIED]
+## 2026-09-07 패치 배포 완료 [VERIFIED]
 
-위험 재발 및 사건 순서 처리 수정. 컴파일 및 83/83 검사 통과.
-**공개 배포는 수정 전 버전이며 재배포하지 않았다.** 아래 8월 기록은 이전 제출 상태다.
+위험 재발 및 사건 순서 처리 수정. 컴파일 및 83/83 검사 통과 후 **CC3 테스트넷에 재배포했다.**
+실제 sNUSD pause 증명을 재입력해 IMPAIRED 판정과 신규 여신 차단(`AssetImpaired`)까지 온체인에서 확인했다.
 상세: [PATCH_2026-09-07.md](PATCH_2026-09-07.md).
+
+```
+EligibilityLedger  0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32
+GatedCreditLine    0xDcd5dfb82CA8fcDD3E628b327d5CeaCdBE69771A
+EvmV1Decoder       0x00718d01897236C3352D5BA689BcC5c540dd9d97
+submitEvent tx     0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff2461c  (gas 346,598)
+탐색기             https://creditcoin3-testnet.subscan.io/account/0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32
+```
+
+배포 지갑은 동일(`0xDd9ddFcEb1dc1dC0aE393DD458Fe376aaB60294a`), 잔액 약 9,999 CTC.
+**데모 영상과 `docs/deck.pdf`는 패치 전 배포(아래 8월 기록)를 찍은 것이다.** 두 배포 모두 온체인에 남아 있다.
 
 
 **갱신: 2026-08-31 KST** · 마감까지 **D-15** (2026-09-06 13:59 KST)
@@ -15,7 +26,7 @@
 CC3 온체인에서 신규 여신을 차단하는 것까지 실제로 작동한다. 남은 것은 발표 산출물뿐이다.
 
 ```
-EligibilityLedger  0xA47a20079112252afAF2d54fF1FF0268bE3826a4
+EligibilityLedger  0xA47a20079112252afAF2d54fF1FF0268bE3826a4      ← 패치 전(2026-08-22). 영상·덱이 보여주는 배포
 GatedCreditLine    0x0D35A7Bd0dcBBebAb54861bCe9CD04Da790B32eb
 EvmV1Decoder       0xd735522d27cF22E443F48a3a3A3Dd2de8f24F008
 submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68da4df  (gas 346,458)
@@ -55,7 +66,7 @@ submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68
 | `contracts/README.md` | **갱신(2026-08-22)** — v1 전용이던 것을 EligibilityLedger 중심으로 재작성 |
 | v1(VaultAuthorityLedger) 회귀 | 15/15 + 8/8 여전히 통과 (proof 배관 검증용으로 유지) |
 
-**회귀 총합 60/60.**
+**회귀 총합 83/83** (2026-09-07 순서 패치 포함. 8월 시점 기록은 60/60이었다).
 
 ### 실제 데이터로 증명된 것 [VERIFIED]
 
