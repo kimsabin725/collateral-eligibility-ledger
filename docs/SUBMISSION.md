@@ -11,7 +11,7 @@ Everything DoraHacks asks for, ready to paste. Deadline **2026-09-06 13:59 KST**
 | Original work built during the hackathon | ✅ repo history starts 2026-08-17 |
 | GitHub repository + README | ✅ https://github.com/kimsabin725/collateral-eligibility-ledger |
 | Deck or whitepaper PDF URL | ✅ hosted on GitHub (link below) |
-| Prototype demo video URL | ✅ `docs/demo.mp4` (2:36) — ⬜ needs a YouTube URL |
+| Prototype demo video URL | ✅ https://youtu.be/9gG6zEujYBA (2:36) — shows the **pre-patch** deployment |
 | Project description + Attestcoin integration summary | ✅ below |
 
 ---
@@ -30,6 +30,12 @@ BlockProver         0x0000000000000000000000000000000000000FD2   (runtime precom
 Proof-admitting tx  0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff2461c
 Source event        sNUSD Paused() · Ethereum mainnet block 25,745,732
 ```
+
+On-chain re-verification of the patched deployment (read-only, no state change):
+`docs/transcripts/verify-cc3-2026-09-07.log` — reproduce with `node scripts/verify-deployment.js`
+from `contracts/`. This is the supplementary record to read next to the demo video, which was
+recorded against the earlier version. The decoder is unaffected by the patch: `0xd735…F008` and
+`0x0071…d97` have byte-identical runtime code, so either address works.
 
 Pre-patch deployment (2026-08-22) — the addresses the demo video and `deck.pdf` show:
 ```
@@ -184,16 +190,39 @@ known-good run.
 
 ---
 
-## Remaining human steps
+## Remaining human steps (2026-09-07 patch)
 
-1. **Push the repo to GitHub.** No remote is configured yet; there is one commit. Confirm
-   `contracts/.env` is still ignored before pushing — it holds the deployer private key.
-2. **Host `docs/deck.pdf`** and take the URL. Re-export after any edit with:
+The repo, deck and video were all submitted on 2026-08-31. The ordering patch was redeployed on
+2026-09-07, so the addresses moved. Everything inside this repo is updated. What is left lives
+outside it and has to be edited by hand.
+
+### DoraHacks (the submitted BUIDL — still editable before judging)
+
+1. **Contract addresses in the submission form.** Replace the 2026-08-22 addresses with the patched
+   set above (`0x00Fc…FF32`, `0xDcd5…771A`, `0x0071…d97`) and the admitting tx `0xeca0db64…1ff2461c`.
+   Keeping the old ones is also defensible — the video shows them — but then the repo and the form
+   disagree, so pick one and say which in the description.
+2. **One line in the description** noting the 2026-09-07 patch and that the video demonstrates the
+   pre-patch build, with a pointer to `docs/PATCH_2026-09-07.md` and
+   `docs/transcripts/verify-cc3-2026-09-07.log`.
+3. Field-by-field original inputs are in `private/docs/DORAHACKS_SUBMISSION_INPUTS.md` (kept outside
+   this repo).
+
+### Deck (`docs/deck.html` → `docs/deck.pdf`)
+
+4. **Two places carry the old ledger address**: the "Live on CC3 Testnet" chip and the addresses
+   table on the closing slide. Changing them makes the deck disagree with the video; leaving them
+   makes it disagree with the repo. Recommended: update the table to the patched addresses and add a
+   one-line footnote that the video was recorded on the earlier deployment.
+5. Re-export the PDF after any edit:
    ```bash
    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --disable-gpu \
      --no-pdf-header-footer --print-to-pdf=docs/deck.pdf --virtual-time-budget=8000 \
      "file://$PWD/docs/deck.html"
    ```
-3. **Record and upload the demo video**, then paste the URL into the form.
-4. **Submit on DoraHacks** with the description and Attestcoin summary above. Track: RWA (DeFi is the
-   fallback if RWA is crowded — the product logic is credit, but the subject is a tokenised instrument).
+
+### Video
+
+6. **No re-record is assumed.** https://youtu.be/9gG6zEujYBA stays as the pre-patch demo; the
+   patched behaviour is evidenced by the verification transcript instead. If it is re-recorded later,
+   the shot list above still applies — only the addresses on screen change.

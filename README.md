@@ -21,7 +21,11 @@ flips the asset's eligibility, and gates **new** credit against it — while nev
 **2026-09-07 patch — redeployed.** The addresses below run the patched contracts, which fix
 recurrent impairment and source-event ordering. See [`docs/PATCH_2026-09-07.md`](docs/PATCH_2026-09-07.md).
 The demo video and `docs/deck.pdf` were recorded against the pre-patch deployment, whose addresses
-are listed at the bottom of this section; both deployments remain readable on-chain.
+are listed at the bottom of this section; both deployments remain readable on-chain. **The video
+therefore demonstrates the earlier version.** What the patched deployment does on-chain is recorded
+in [`docs/transcripts/verify-cc3-2026-09-07.log`](docs/transcripts/verify-cc3-2026-09-07.log) —
+read-only queries against the live addresses, reproducible with `node scripts/verify-deployment.js`
+from `contracts/`. Read it alongside the video.
 
 | Contract | Address |
 |---|---|
@@ -32,7 +36,12 @@ are listed at the bottom of this section; both deployments remain readable on-ch
 
 **The proof-admitting transaction:**
 [`0xeca0db64…1ff2461c`](https://creditcoin3-testnet.subscan.io/tx/0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff2461c)
-— 346,598 gas. Chain id `102031`. Full record in [`contracts/deployment.json`](contracts/deployment.json).
+— 346,598 gas. Chain id `102031`. Full record in [`contracts/deployment.json`](contracts/deployment.json),
+on-chain re-verification in [`docs/transcripts/verify-cc3-2026-09-07.log`](docs/transcripts/verify-cc3-2026-09-07.log).
+
+The decoder was unchanged by the patch: the pre-patch decoder at `0xd735…F008` and the new one at
+`0x0071…d97` have byte-identical runtime code, so the old deployment was reusable and either address
+works. A fresh one was deployed only to keep the patched set self-contained.
 
 <details><summary>Pre-patch deployment (2026-08-22 — what the video and deck show)</summary>
 

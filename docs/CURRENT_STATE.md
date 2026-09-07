@@ -15,7 +15,12 @@ submitEvent tx     0xeca0db64871daeab247dab6439a4905ee1e26208e00cb8c252b4e7bf1ff
 ```
 
 배포 지갑은 동일(`0xDd9ddFcEb1dc1dC0aE393DD458Fe376aaB60294a`), 잔액 약 9,999 CTC.
-**데모 영상과 `docs/deck.pdf`는 패치 전 배포(아래 8월 기록)를 찍은 것이다.** 두 배포 모두 온체인에 남아 있다.
+**데모 영상과 `docs/deck.pdf`는 패치 전 배포(아래 8월 기록)를 찍은 것이다 — 영상은 이전 버전 시연이다.**
+두 배포 모두 온체인에 남아 있다. 패치본이 실제로 무엇을 하는지는
+`docs/transcripts/verify-cc3-2026-09-07.log`(라이브 주소에 대한 읽기 전용 조회)에 남겼고,
+`contracts/`에서 `node scripts/verify-deployment.js`로 재현된다. 영상과 함께 보는 보완 자료다.
+디코더는 패치 영향이 없다 — 구 `0xd735…F008`과 신 `0x0071…d97`의 런타임 코드가 바이트 단위로 같아
+구 배포를 그대로 재사용할 수 있었다. 패치본 세트를 자체 완결로 두려고 새로 배포했을 뿐이다.
 
 
 **갱신: 2026-08-31 KST** · 마감까지 **D-15** (2026-09-06 13:59 KST)
@@ -102,7 +107,7 @@ C·D는 **애플리케이션 코드에 도달하지도 못한다** — Creditcoi
 | DoraHacks 제출 | ✅ "BUIDL Submitted" — under review |
 | GitHub (공개) | https://github.com/kimsabin725/collateral-eligibility-ledger |
 | 덱 PDF | `docs/deck.pdf` (8장) |
-| 데모 영상 | https://youtu.be/9gG6zEujYBA (2:36, 본인 나레이션) |
+| 데모 영상 | https://youtu.be/9gG6zEujYBA (2:36, 본인 나레이션) — **패치 전(2026-08-22) 배포 시연**. 보완 자료: `docs/transcripts/verify-cc3-2026-09-07.log` |
 | 트랙 | RWA / DeFi |
 | 제출 입력값 전문 | `private/docs/DORAHACKS_SUBMISSION_INPUTS.md` (비공개, 저장소 밖) |
 
