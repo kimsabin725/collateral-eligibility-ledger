@@ -234,4 +234,4 @@ feature is not the right problem to build on. That reasoning is recorded in
 
 ## License
 
-MIT.
+[MIT](LICENSE). 저작권 표기는 `Copyright (c) 2026 kimsabin725`입니다.
