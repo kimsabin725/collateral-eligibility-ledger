@@ -1,4 +1,14 @@
-# 현재 상태 — 항상 최신으로 유지하는 파일
+# 상태 기록 — 최신이 맨 위
+
+## 2026-10-10 최종 상태
+
+- **대회 결과:** BUIDL CTC 2026 Fall에서 수상하지 못했다(2026-09-21 결과 확인). 제출은 2026-08-31.
+- **검사:** 83/83 — `eligibility.test.js` 50 + `ledger.test.js` 15 + `realdata-eligibility` 10 + `realdata` 8.
+- **컨트랙트 크기:** `EligibilityLedger` 생성 바이트코드 7,177 B(2026-09-07 패치 후), `GatedCreditLine` 5,007 B.
+- **배포:** 아래 2026-09-07 패치 배포가 현재 주소다. CC3 테스트넷에서 계속 조회된다.
+
+아래는 당시 기록을 그대로 둔 이력이다. 숫자·마감·남은 일은 그 시점 기준이다.
+
 
 ## 2026-09-07 패치 배포 완료 [VERIFIED]
 
@@ -61,9 +71,9 @@ submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68
 
 | 산출물 | 상태 |
 |---|---|
-| `contracts/src/EligibilityLedger.sol` | 7,431 bytes 컴파일 — 5중 검사, 최earliest-impairment 규칙, 복구 순서 검증 |
+| `contracts/src/EligibilityLedger.sol` | 7,431 bytes 컴파일(패치 전, 현재 7,177 B) — 5중 검사, 최earliest-impairment 규칙, 복구 순서 검증 |
 | `contracts/src/GatedCreditLine.sol` | 5,007 bytes — 신규 여신 게이팅, **출구는 절대 차단 안 함** |
-| `contracts/test/eligibility.test.js` | **27/27** |
+| `contracts/test/eligibility.test.js` | **27/27** (당시 기준, 현재 50/50) |
 | `contracts/test/realdata-eligibility.test.js` | **10/10** — 실제 mainnet proof + 실제 EvmV1Decoder |
 | `contracts/scripts/deploy-eligibility.js` | **CC3에서 실행 성공** — 배포+실proof ingest+게이트 거절까지 |
 | `contracts/scripts/demo-rejections.js` | **신규(2026-08-22)** — 위조 proof 4종 온체인 거절 데모, read-only |
@@ -116,7 +126,7 @@ C·D는 **애플리케이션 코드에 도달하지도 못한다** — Creditcoi
 
 
 ⚠️ `deploy-eligibility.js`를 다시 돌리면 **새 주소로 재배포되고 `deployment.json`이 덮어써진다.**
-그러면 README·HANDOFF_MANIFEST·이 파일·`docs/deck.html`의 주소가 전부 낡는다. 상세는 `docs/SUBMISSION.md`.
+그러면 README·이 파일·`docs/deck.html`의 주소가 전부 낡는다. 상세는 `docs/SUBMISSION.md`.
 
 ### CONDITION 1 핵심 증거 [VERIFIED]
 - **USDe**: 통제 Ethereum(`0x4c9EDD58…`, supply 3.99B) → Robinhood Chain LayerZero OFT(`0x5d3a1Ff2…`, supply 288.8M)

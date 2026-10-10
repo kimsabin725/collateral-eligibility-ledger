@@ -3,7 +3,7 @@
 **An asset can stop being usable as collateral before its price moves. On-chain credit only has
 the price axis. This proves the other one, across chains.**
 
-Built for **BUIDL CTC 2026 Fall** — RWA / DeFi track. Deployed and running on **CC3 Testnet**.
+Built solo for **BUIDL CTC 2026 Fall** — RWA / DeFi track, submitted 2026-08-31. It did not place among the winners. Deployed and still running on **CC3 Testnet**.
 
 When an issuer pauses an instrument, the asset is immediately ineligible as collateral even though
 its oracle price has not moved yet. The lending markets holding that asset are usually unrelated
@@ -234,4 +234,4 @@ feature is not the right problem to build on. That reasoning is recorded in
 
 ## License
 
-[MIT](LICENSE). 저작권 표기는 `Copyright (c) 2026 kimsabin725`입니다.
+[MIT](LICENSE). Copyright (c) 2026 kimsabin725.

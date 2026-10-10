@@ -1,5 +1,7 @@
 # Submission package — BUIDL CTC 2026 Fall
 
+> **Archived.** This is the package as submitted on 2026-08-31. This entry did not place among the winners.
+
 Everything DoraHacks asks for, ready to paste. Deadline **2026-09-06 13:59 KST**.
 
 | Requirement | Status |
@@ -46,7 +48,7 @@ Proof-admitting tx  0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec6
 
 > ⚠️ **Re-running `deploy-eligibility.js` deploys fresh contracts and overwrites
 > `contracts/deployment.json` with new addresses.** It was last re-run on 2026-09-07 for the
-> ordering patch; the addresses above were updated in this file, `README.md`, `HANDOFF_MANIFEST.md`
+> ordering patch; the addresses above were updated in this file, `README.md`
 > and `docs/CURRENT_STATE.md`. `docs/deck.html`/`deck.pdf` were updated too. Only the demo
 > video still shows the pre-patch deployment. If you re-run it again, update all of those places.
 
