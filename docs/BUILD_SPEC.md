@@ -101,7 +101,7 @@ also becomes permissionless, because the proof — not the submitter — is what
 
 | Layer | Responsibility | Trusted? |
 |---|---|---|
-| **Ethereum** (mainnet, chainKey **3**; Sepolia = chainKey **1**) | Ground truth. Emits the authority and action events. **Source events come from ~200 third-party MetaMorpho vaults we did not deploy.** [VERIFIED] This is permitted — no official page makes deploying your own source contract a requirement — but it deviates from the documented best practice *"An ASC-enabled dApp should have a single source chain contract"*. That is why `knownVaults` (§11) and the discovery caveat (§6) exist. See `ENVIRONMENT_AUDIT.md` §E. | Emits faithfully |
+| **Ethereum** (mainnet, chainKey **3**; Sepolia = chainKey **1**) | Ground truth. Emits the authority and action events. **Source events come from ~200 third-party MetaMorpho vaults we did not deploy.** [VERIFIED] This is permitted — no official page makes deploying your own source contract a requirement — but it deviates from the documented best practice *"An ASC-enabled dApp should have a single source chain contract"*. That is why `knownVaults` (§11) and the discovery caveat (§6) exist. | Emits faithfully |
 | **Attestcoin** | Merkle transaction-inclusion proof + block-continuity proof; exposes raw tx bytes. Verified by the BlockProver precompile `0x…0FD2`. Does **not** check tx success. | No — it verifies |
 | **Creditcoin (CC3, chainId 102031)** | Application checks → decode via own `EvmV1Decoder` → append record → expose queryable role/action view. | No — it enforces |
 | **Frontend** | Display, source-tx links, "verify it yourself". | Yes (display only) |
