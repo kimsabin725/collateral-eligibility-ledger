@@ -87,7 +87,7 @@ same address is a different contract, and reverts with `WrongChainKey`.
 
 | File | Purpose |
 |---|---|
-| `src/EligibilityLedger.sol` | The ledger: verify → app checks → decode → append (7,431 bytes) |
+| `src/EligibilityLedger.sol` | The ledger: verify → app checks → decode → append (7,177 bytes of creation bytecode after the 2026-09-07 patch) |
 | `src/GatedCreditLine.sol` | Credit venue reading the ledger; exits never gated (5,007 bytes) |
 | `src/VaultAuthorityLedger.sol` | v1 — authority→action composition, kept as regression |
 | `src/vendor/EvmV1Decoder.sol` | Vendored verbatim from `@gluwa/usc-contracts@0.1.2`. We deploy our own because the decoder listed on the official chains/environments page is an older build missing `getLogsByEventSignature` (verified 2026-08-17) |

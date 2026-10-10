@@ -137,7 +137,6 @@ spike/
   scripts/05-prove-curator-action.js     proves a real vault allocation action
   scripts/06-prove-authority-action-chain.js  THE core composition, both real txs
 ideation/                    problem search, kill records, decision trail (12 files)
-HANDOFF_MANIFEST.md          bundle manifest
 .gitignore
 ```
 
