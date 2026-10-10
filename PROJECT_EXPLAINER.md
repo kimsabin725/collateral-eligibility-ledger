@@ -455,5 +455,5 @@ We make no claim about winning, and no claim beyond what the published rules act
 ---
 
 **Where to go next:** `docs/BUILD_SPEC.md` (frozen scope and claims) ·
-`docs/CODEX_HANDOFF.md` (status and how to run) · `contracts/README.md` (build and test) ·
+`docs/CURRENT_STATE.md` (status) · `contracts/README.md` (build, test and run) ·
 `spike/FINDINGS.md` (measured capability limits).
