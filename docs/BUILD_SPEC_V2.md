@@ -1,7 +1,7 @@
 # BUILD SPEC v2 — Collateral Eligibility Ledger (FROZEN 2026-08-18)
 
 > 이 문서가 구현의 계약이다. 여기서 벗어나면 스펙을 먼저 고친다.
-> 판정 근거: `ideation/FINAL_VERDICT.md` (GO)
+> 판정 근거: `ideation/FINAL_VERDICT.md`(내부 문서, 비공개) (GO)
 
 ## 1. 한 문장
 

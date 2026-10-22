@@ -56,16 +56,16 @@ submitEvent tx     0xbf8bda4f6595a1c61043f3897e35056fc0fbc5d9952d3abe8166d7bec68
 > 그 사건은 이더리움에서 일어나고, 담보를 잡은 시장은 다른 체인에 있다.
 > 그 사건을 Attestcoin proof로 검증해 **담보 적격성**을 뒤집는 원장.
 
-- 전체 근거·점수·반례: `ideation/IDEA_SELECTION_2026-08-18.md`
+- 전체 근거·점수·반례: `ideation/IDEA_SELECTION_2026-08-18.md`(내부 문서, 비공개)
 - 2위 Double-Pledge Evidence Registry (7.70) / 3위 Look-Through Entitlement Register (6.95)
 - 어제 구현물(Authority→Action)은 **KILL** 확정 — Morpho V2로 해소되는 patchable 문제
 
-> 📌 **전체 상태를 하나로 복원하려면 루트의 `CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md`(730줄)를 읽어라.**
+> 📌 전체 상태 스냅샷 `CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md`는 내부 문서, 비공개.
 > 문제정의·탐색과정·리서치 근거·설계·구현상태·리스크가 전부 들어 있는 스냅샷이다.
 
 ## 상태: **제출 완료** (2026-08-31) — 심사 발표 2026-09-18
 
-판정 근거: `ideation/FINAL_VERDICT.md` (GO) · 동결 스펙: `docs/BUILD_SPEC_V2.md`
+판정 근거: `ideation/FINAL_VERDICT.md`(내부 문서, 비공개) (GO) · 동결 스펙: `docs/BUILD_SPEC_V2.md`
 
 ### 지금까지 만든 것
 
@@ -165,7 +165,7 @@ Creditcoin은 outbound 쓰기가 불가하므로 **신용 베뉴 자체가 CC3 �
 ## 폐기·보류된 것
 
 - **VaultAuthorityLedger(어제 아이디어)** — Morpho V2가 역할분리로 해소 → "패치되면 사라지는 문제"
-- 8개 구조적 영역 중 6개 KILL/DOWNRANK — 상세는 `ideation/STRUCTURAL_SEARCH_ROUND1.md`
+- 8개 구조적 영역 중 6개 KILL/DOWNRANK — 상세는 `ideation/STRUCTURAL_SEARCH_ROUND1.md`(내부 문서, 비공개)
 - 후보 A는 **Securitize Vault Registrar**(2026-03)가 정면 대응 중이라 89 → 76점으로 하락
 
 ## 막혀 있는 것

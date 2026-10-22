@@ -110,5 +110,4 @@ same address is a different contract, and reverts with `WrongChainKey`.
 - Discovery is **not** trustless — finding which transactions to submit still needs log scanning.
 - The ERC-20s in the demo are mocks. The source event is real.
 
-Full limitation list: [`../docs/BUILD_SPEC_V2.md`](../docs/BUILD_SPEC_V2.md) and
-[`../CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md`](../CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md) §15.
+Full limitation list: [`../docs/BUILD_SPEC_V2.md`](../docs/BUILD_SPEC_V2.md). The full research notes are an internal document, not public.

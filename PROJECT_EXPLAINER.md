@@ -90,7 +90,7 @@ Two consequences that shape everything downstream:
 > **A correction, noted once and not dwelt on.** An earlier version of this project described
 > `ReallocateSupply` as "the curator moving depositor funds" and treated `SetCap` as a curator
 > decision. Both were wrong for the reasons above, and both were corrected against contract source
-> before implementation. Details, if you want them: `ideation/CORRECTION_ROLE_ATTRIBUTION.md`.
+> before implementation. Details are in an internal document (not public).
 
 ---
 

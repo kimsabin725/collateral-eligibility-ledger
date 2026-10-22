@@ -78,8 +78,8 @@ problem this repo addresses.
 > independent: USDe is controlled on Ethereum and lent against on Robinhood Chain via a LayerZero
 > OFT, where Morpho carried **$285,532,168 collateral / $251,647,632 borrowed at 92% LLTV**;
 > syrupUSDG shows the same split with Maple's pool on Ethereum; Centrifuge's JAAA/JTRSY encode an
-> Ethereum hub with Avalanche and Base spokes. See
-> [`CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md`](CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md) §9–10.
+> Ethereum hub with Avalanche and Base spokes. Sources are in the project research notes
+> (internal document, not public).
 
 ---
 
@@ -193,7 +193,7 @@ status for the same set of proven events. This does not prove a complete event h
 - **Mock tokens.** The ERC-20s deployed by the demo script are mocks. The *event* is real; the
   lending market is a PoC venue.
 
-Full limitation list and the prior-art assessment: [`CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md`](CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md) §12, §15.
+Full limitation list: [`docs/BUILD_SPEC_V2.md`](docs/BUILD_SPEC_V2.md). The prior-art assessment is in the project research notes (internal document, not public).
 
 ---
 
@@ -212,8 +212,6 @@ Full limitation list and the prior-art assessment: [`CROSS_CHAIN_COLLATERAL_ELIG
 | `docs/transcripts/` | Verbatim output of the live CC3 deploy and the rejection demo |
 | `docs/BUILD_SPEC_V2.md` | Frozen scope and claims |
 | `docs/CURRENT_STATE.md` | Always-current status file |
-| `CROSS_CHAIN_COLLATERAL_ELIGIBILITY_PROJECT_STATE.md` | Full research trail: problem search, killed candidates, prior art, evidence, design rationale |
-| `ideation/` | The candidate funnel — 18 candidates, 13 eliminated, and why |
 
 The build requires `viaIR: true` (the flattened 7-parameter proof entry point overflows legacy
 codegen's stack) and `evmVersion: 'paris'` (avoids `PUSH0`/`MCOPY` so identical bytecode runs on the
@@ -227,8 +225,8 @@ An earlier build, `VaultAuthorityLedger`, composed two proofs to attribute a Met
 `reallocate` to a specific granted role. It works and its 15/15 + 8/8 tests still pass — it is kept
 as the proof-plumbing regression. It was retired as the headline idea because Morpho V2's role
 separation dissolves the problem it addressed: a problem that disappears when one protocol ships one
-feature is not the right problem to build on. That reasoning is recorded in
-[`ideation/`](ideation/) rather than hidden.
+feature is not the right problem to build on. That reasoning is recorded in the
+project research notes (internal document, not public).
 
 ---
 

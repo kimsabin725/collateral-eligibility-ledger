@@ -2,7 +2,7 @@
 
 > Frozen 2026-08-17. **Purpose: stop scope and claims from drifting during implementation.**
 > No new research went into this document; every fact is carried from
-> `ideation/CORRECTION_ROLE_ATTRIBUTION.md`, `ideation/FINAL_*`, `ideation/FINALIST_DEEP_DIVE.md`,
+> internal decision notes (internal document, not public),
 > `spike/BASELINE.md`, `spike/FINDINGS.md` and the six scripts in `spike/scripts/`.
 >
 > Labels used throughout: **[VERIFIED]** = we executed it and saw the result ·
