@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-/// @notice Creditcoin BlockProver precompile (0x…0FD2). Verifies transaction inclusion and block
-///         continuity. It does NOT check whether the transaction succeeded — the dApp must.
+/// @notice BlockProver precompile (0x…0FD2): checks inclusion and continuity, not transaction success.
 interface INativeQueryVerifier {
     struct MerkleProofEntry { bytes32 hash; bool isLeft; }
     struct MerkleProof { bytes32 root; MerkleProofEntry[] siblings; }
@@ -31,29 +30,10 @@ interface IEvmDecoder {
     function decodeReceiptFields(bytes memory chunk) external pure returns (ReceiptFields memory);
 }
 
-/**
- * @title EligibilityLedger
- * @notice Records, on Creditcoin, that an asset-level event on a source chain has impaired the
- *         asset's usability as collateral — admitted only on an Attestcoin proof of the source
- *         transaction.
- *
- * @dev WHY THIS EXISTS. Institutional collateral is managed on two axes: price, and *eligibility*.
- *      When an issuer pauses redemptions or freezes an instrument, the asset stops being usable as
- *      collateral before its price moves. Onchain lending only has the price axis. Where the asset
- *      is controlled on one chain and lent against on another, the credit venue has no way to see
- *      the event at all — today it must trust a monitoring vendor or an oracle publisher.
- *
- *      This contract replaces that assertion with a proof the destination verifies itself.
- *
- *      WHAT IT DELIBERATELY DOES NOT CLAIM:
- *        - that an asset is healthy. Absence of an event is unprovable; NO_PROOF means only that
- *          nothing has been proven here.
- *        - a complete event history. Only submitted, proven events exist in this ledger.
- *        - real-time protection. Attestation lags the source chain by roughly 8–9 minutes, so this
- *          gates NEW credit, it does not block a transaction in flight.
- */
+/// @title EligibilityLedger
+/// @notice Records on Creditcoin that a proven source-chain event impaired an asset's use as collateral.
+/// @dev NO_PROOF means nothing was proven, not that the asset is healthy; attestation lags ~8–9 min, so this gates new credit only.
 contract EligibilityLedger {
-    // ─────────────────────────────── types ───────────────────────────────
 
     enum Status {
         NO_PROOF,  // nothing proven — NOT a statement that the asset is fine
@@ -87,18 +67,15 @@ contract EligibilityLedger {
         uint64 admittedAt;    // Creditcoin block in which the proof was admitted
     }
 
-    // ────────────────────────────── storage ──────────────────────────────
 
     address public immutable owner;
     INativeQueryVerifier public immutable VERIFIER;
     IEvmDecoder public immutable DECODER;
 
-    /// @dev keccak(chainKey, blockHeight, txIndex) — keyed by POSITION, so a submitter cannot
-    ///      influence it. txIndex is recomputed on-chain by the precompile.
+    /// @dev Replay key keccak(chainKey, blockHeight, txIndex): keyed by position so a submitter cannot influence it.
     mapping(bytes32 => bool) public processedQueries;
 
-    /// @dev Emitter allowlist. Without it anyone deploys a look-alike contract, emits Paused, and
-    ///      proves it. This is the single most important check in the pipeline.
+    /// @dev Emitter allowlist; without it anyone could prove a Paused event from a look-alike contract.
     mapping(address => Asset) public assets;
     mapping(address => LatestEvent) public latestEvents;
 
@@ -109,7 +86,6 @@ contract EligibilityLedger {
     Event[] public events;
     mapping(address => uint256[]) public eventsOfAsset;
 
-    // ─────────────────────────────── events ──────────────────────────────
 
     event AssetRegistered(address indexed asset, uint64 chainKey, string label);
     event SignatureConfigured(bytes32 indexed sig, bool impairment, bool enabled);
@@ -117,7 +93,6 @@ contract EligibilityLedger {
     event Restored(address indexed asset, bytes32 indexed sig, uint64 srcBlock, uint256 eventId);
     event EventIgnored(address indexed asset, bytes32 indexed sig, uint64 srcBlock, string reason);
 
-    // ─────────────────────────────── errors ──────────────────────────────
 
     error NotOwner();
     error ProofRejected();
@@ -137,7 +112,6 @@ contract EligibilityLedger {
         _;
     }
 
-    // ──────────────────────────── configuration ──────────────────────────
 
     function registerAsset(address asset, uint64 chainKey, string calldata label)
         external onlyOwner
@@ -162,10 +136,8 @@ contract EligibilityLedger {
         emit SignatureConfigured(sig, false, enabled);
     }
 
-    // ──────────────────────────── entry point ────────────────────────────
 
-    /// @notice Submit a proven source transaction. Every allowlisted log whose signature is a
-    ///         configured impairment or restoration is recorded; everything else is skipped.
+    /// @notice Submit a proven source tx; allowlisted impairment/restoration logs are recorded, the rest skipped.
     /// @dev Parameter shape follows the documented ASC entry-point pattern (flattened proof).
     function submitEvent(
         uint64 chainKey,
@@ -192,8 +164,7 @@ contract EligibilityLedger {
             bool isRestore = restorationSig[sig];
             if (!isImpair && !isRestore) continue;       // (4) signature match
 
-            // An asset is registered against exactly one source chain. A proof from another chain
-            // naming the same address is a different contract and must not move this state.
+            // An asset belongs to one source chain; the same address on another chain is a different contract.
             if (a.chainKey != chainKey) revert WrongChainKey(log.address_, a.chainKey, chainKey);
 
             _recordEvent(a, log.address_, sig, isImpair, blockHeight, txIndex, i);
@@ -202,10 +173,8 @@ contract EligibilityLedger {
         if (count == 0) revert NoMatchingEvent();
     }
 
-    // ──────────────────────────── state machine ──────────────────────────
 
-    /// @dev Historical cutoff and current status have separate ordering rules. Retain even a
-    ///      restoration received first, so proof delivery order cannot change the final status.
+    /// @dev Keep even an early-arriving restoration so proof delivery order cannot change the final status.
     function _recordEvent(
         Asset storage a, address asset, bytes32 sig, bool impairment,
         uint64 blockHeight, uint64 txIndex, uint256 logIndex
@@ -247,7 +216,6 @@ contract EligibilityLedger {
         eventsOfAsset[asset].push(id);
     }
 
-    // ──────────────────────────── verification ───────────────────────────
 
     /// @dev Checks 1–3. Any failure reverts and writes nothing.
     function _verify(
@@ -281,7 +249,6 @@ contract EligibilityLedger {
         if (receipt.receiptStatus != 1) revert SourceTxFailed(receipt.receiptStatus);
     }
 
-    // ───────────────────────────── read paths ────────────────────────────
 
     /// @notice Current status of an asset.
     /// @dev NO_PROOF is not a clean bill of health — see the contract-level notice.

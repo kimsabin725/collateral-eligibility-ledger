@@ -1,8 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.23;
 
-/// @notice Creditcoin BlockProver precompile (0x…0FD2). Verifies transaction inclusion and block
-///         continuity. It does NOT check whether the transaction succeeded — the dApp must.
+/// @notice BlockProver precompile (0x…0FD2): checks inclusion and continuity, not transaction success.
 interface INativeQueryVerifier {
     struct MerkleProofEntry { bytes32 hash; bool isLeft; }
     struct MerkleProof { bytes32 root; MerkleProofEntry[] siblings; }
@@ -19,9 +18,7 @@ interface INativeQueryVerifier {
     function calculateTxIndex(MerkleProof calldata merkleProof) external view returns (uint64);
 }
 
-/// @notice EvmV1Decoder from @gluwa/usc-contracts, deployed separately.
-///         NOTE: the decoder pre-deployed at the address in the official chains/environments page
-///         is an older build; deploy your own from the npm package.
+/// @notice EvmV1Decoder from @gluwa/usc-contracts; deploy your own, the pre-deployed one is an older build.
 interface IEvmDecoder {
     struct LogEntry { address address_; bytes32[] topics; bytes data; }
     struct ReceiptFields {
@@ -33,26 +30,10 @@ interface IEvmDecoder {
     function decodeReceiptFields(bytes memory chunk) external pure returns (ReceiptFields memory);
 }
 
-/**
- * @title VaultAuthorityLedger
- * @notice An append-only record of WHO was granted authority over a DeFi lending vault on
- *         Ethereum, and WHAT they subsequently did with depositor funds — admitted only on an
- *         Attestcoin proof of the underlying Ethereum transaction.
- *
- * @dev THE CENTRAL DESIGN POINT. MetaMorpho's `reallocate` is `onlyAllocatorRole`, which admits
- *      `isAllocator[sender] || sender == curator || sender == owner`. A single ReallocateSupply
- *      proof therefore shows only that *some address* moved funds — it does NOT identify a role.
- *      A role is attributed only when a separately-proven authority grant exists for the same
- *      (vault, actor) at a strictly earlier source block. Otherwise the role stays UNKNOWN.
- *      The ledger never guesses.
- *
- *      What this contract does NOT and CANNOT establish:
- *        - that the grant was never revoked before the action (absence is unprovable)
- *        - that the action was imprudent (judgement, not fact)
- *        - a complete history (only submitted events exist here)
- */
+/// @title VaultAuthorityLedger
+/// @notice Append-only record of who was granted authority over a lending vault and what they did, admitted only on Attestcoin proofs.
+/// @dev A ReallocateSupply proof alone does not identify a role; a role comes only from a proven, strictly earlier grant for the same (vault, actor).
 contract VaultAuthorityLedger {
-    // ─────────────────────────────── types ───────────────────────────────
 
     enum Role { UNKNOWN, OWNER, CURATOR, ALLOCATOR }
 
@@ -76,18 +57,15 @@ contract VaultAuthorityLedger {
         uint64 srcBlock;
     }
 
-    // ────────────────────────────── storage ──────────────────────────────
 
     address public immutable owner;
     INativeQueryVerifier public immutable VERIFIER;
     IEvmDecoder public immutable DECODER;
 
-    /// @dev keccak(chainKey, blockHeight, txIndex) — replay protection keyed by POSITION, so the
-    ///      submitter cannot influence it. txIndex is recomputed on-chain by the precompile.
+    /// @dev Replay key keccak(chainKey, blockHeight, txIndex): keyed by position so the submitter cannot influence it.
     mapping(bytes32 => bool) public processedQueries;
 
-    /// @dev Emitter allowlist. Without this, anyone deploys a look-alike contract, emits
-    ///      ReallocateSupply naming any actor, and proves it. Single most important check.
+    /// @dev Emitter allowlist; without it anyone could prove an event from a look-alike contract.
     mapping(address => bool) public knownVaults;
 
     RoleGrant[] public grants;
@@ -104,7 +82,6 @@ contract VaultAuthorityLedger {
     bytes32 public constant REALLOCATE_SUPPLY =
         keccak256("ReallocateSupply(address,bytes32,uint256,uint256)");
 
-    // ─────────────────────────────── events ──────────────────────────────
 
     event VaultAllowed(address indexed vault, bool allowed);
     event AuthorityRecorded(
@@ -114,7 +91,6 @@ contract VaultAuthorityLedger {
         uint256 indexed recordId, address indexed vault, address indexed actor,
         Role roleAtAction, bytes32 market, uint256 assets, uint64 srcBlock);
 
-    // ─────────────────────────────── errors ──────────────────────────────
 
     error NotOwner();
     error ProofRejected();
@@ -139,7 +115,6 @@ contract VaultAuthorityLedger {
         emit VaultAllowed(vault, allowed);
     }
 
-    // ──────────────────────────── entry points ───────────────────────────
 
     /// @notice Ingest an authority grant/revocation (MetaMorpho `SetIsAllocator`).
     /// @dev Parameter shape follows the documented ASC entry-point pattern (flattened proof).
@@ -170,9 +145,7 @@ contract VaultAuthorityLedger {
             }));
             uint256 gid = grants.length - 1;
             grantsOfActor[actor].push(gid);
-            // Only a positive grant establishes authority. Revocations are appended as history
-            // but deliberately do not clear the pointer: we cannot prove absence either way, and
-            // silently erasing a grant would misrepresent what was proven.
+            // Revocations are kept as history but do not clear the pointer: absence is unprovable either way.
             if (granted) _latestGrant[_key(vault, actor)] = gid + 1;
 
             emit AuthorityRecorded(gid, vault, actor, Role.ALLOCATOR, granted, blockHeight);
@@ -221,7 +194,6 @@ contract VaultAuthorityLedger {
         if (count == 0) revert NoMatchingEvent();
     }
 
-    // ──────────────────────────── verification ───────────────────────────
 
     /// @dev The five mandatory checks, in order. Any failure reverts and writes nothing.
     function _verify(
@@ -255,16 +227,8 @@ contract VaultAuthorityLedger {
         if (receipt.receiptStatus != 1) revert SourceTxFailed(receipt.receiptStatus);
     }
 
-    /// @dev (4) event-signature/arity match and (5) emitter allowlist.
-    ///
-    ///      Non-matching logs are SKIPPED, not reverted on. Real source transactions are routinely
-    ///      batched: the live mainnet grant we ingest (0x52ced076…) sets allocators across several
-    ///      vaults in one transaction, and a busy allocation tx carried 48 logs. Reverting on the
-    ///      first foreign emitter would make every such transaction unusable.
-    ///
-    ///      The security property is unchanged: a log from a non-allowlisted contract is never
-    ///      recorded. If a transaction yields no allowlisted, signature-matching log at all, the
-    ///      caller gets NoMatchingEvent and nothing is written.
+    /// @dev (4) event signature/arity and (5) emitter allowlist. Non-matching logs are skipped, not reverted on,
+    ///      because real transactions batch logs from many vaults.
     function _isTarget(IEvmDecoder.LogEntry memory log, bytes32 sig, uint256 minTopics)
         internal view returns (bool)
     {
@@ -288,7 +252,6 @@ contract VaultAuthorityLedger {
         return keccak256(abi.encodePacked(vault, actor));
     }
 
-    // ───────────────────────────── read paths ────────────────────────────
 
     function recordCount() external view returns (uint256) { return records.length; }
     function grantCount() external view returns (uint256) { return grants.length; }

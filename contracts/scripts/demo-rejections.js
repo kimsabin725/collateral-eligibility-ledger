@@ -1,29 +1,6 @@
 'use strict';
-/**
- * Negative demo — what the deployed ledger REFUSES, on CC3 Testnet.
- *
- *   node scripts/demo-rejections.js
- *
- * The positive path (deploy-eligibility.js) shows a real Ethereum impairment gating credit.
- * This shows the other half: four ways to get a wrong or unauthorised event into the ledger,
- * each rejected on-chain by a different check, with the ledger's state unchanged afterwards.
- *
- * Two are caught by this contract's application checks, and two never reach it at all — the
- * BlockProver precompile reverts inside the Creditcoin runtime first.
- *
- *   A. replay          — resubmit the exact proof already admitted
- *                        → QueryAlreadyProcessed                      [ledger]
- *   B. wrong emitter   — a valid proof of an UNRELATED real mainnet tx
- *                        whose logs come from non-allowlisted contracts
- *                        → NoMatchingEvent                            [ledger]
- *   C. forged proof    — the same bundle, Merkle root off by one bit
- *                        → "Merkle proof validation failed"           [precompile 0x…0FD2]
- *   D. wrong chain     — the real mainnet proof, re-labelled as Sepolia
- *                        → "Continuity proof does not match …"        [precompile 0x…0FD2]
- *
- * Every case runs as eth_call against the LIVE contracts in ../deployment.json, so nothing
- * here can write. The final read-back proves the state never moved.
- */
+// Negative demo: four bad submissions rejected by the deployed ledger on CC3 (eth_call only, nothing written).
+// A replay and B wrong emitter fail in the ledger; C forged Merkle root and D wrong chain revert in the precompile.
 
 const path = require('path');
 const { ethers } = require('ethers');
@@ -37,8 +14,7 @@ const { CC3_TESTNET, CHAIN_KEY } = require('../../spike/src/config');
 const SNUSD = deployment.asset;
 const PAUSE_TX = deployment.sourceTx;
 
-// An unrelated, real Ethereum mainnet transaction already proven end-to-end in spike/scripts/06.
-// Its logs are genuine and its proof is genuine — the emitters are simply not on our allowlist.
+// Real mainnet tx with a genuine proof whose emitters are not on our allowlist.
 const UNRELATED_TX = '0x35a2f50fbbe5c624b6c26551f530448557589c4d92348afdd4070a7fbf98e8f0';
 
 const STATUS = ['NO_PROOF', 'IMPAIRED', 'RESTORED'];
@@ -64,10 +40,7 @@ function corrupt(root) {
   return ethers.hexlify(b);
 }
 
-/**
- * @param expected  custom-error name thrown by the ledger, or the revert string the
- *                  BlockProver precompile raises inside the runtime.
- */
+/** @param expected ledger custom-error name, or the revert string the precompile raises. */
 async function expectRejection(label, ledger, args, layer, expected) {
   process.stdout.write(`  ${label.padEnd(36)}`);
   try {

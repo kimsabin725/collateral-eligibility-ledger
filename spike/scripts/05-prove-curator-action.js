@@ -1,44 +1,12 @@
 'use strict';
-/**
- * Feasibility probe for finalist P-A — DeFi vault governance accountability.
- *
- * Question: can a Creditcoin contract cryptographically prove *who acted* on a lending vault on
- * Ethereum — with no indexer, no Dune, no API?
- *
- * ROLE CORRECTION (verified on-chain 2026-08-17): `reallocate` is `onlyAllocatorRole`, so the
- * caller of ReallocateSupply is an ALLOCATOR (or the curator, or the owner) — NOT necessarily the
- * curator. For steakUSDC, isAllocator(0x9e9110cf…f9e1) == true while curator() is
- * 0x827e8607…eCdB, so that caller is an allocator. Roles must be proven, never assumed.
- *
- * MetaMorpho (Morpho's curated-vault layer) emits exactly the right provenance chain:
- *
- *   MetaMorphoFactory.CreateMetaMorpho(vault, ...)   -> vault V is a genuine MetaMorpho vault
- *   V.SetCurator(curator C)                          -> C controls V
- *   V.SetIsAllocator(A, true)                        -> owner authorised allocator A
- *   V.SubmitCap(caller=C, market id=M, cap)          -> CURATOR set the risk envelope
- *   V.ReallocateSupply(caller=A, id=M, assets)       -> ALLOCATOR executed within it
- *   (note: SetCap is NOT a curator act — acceptCap is permissionless after the timelock)
- *
- * Every one is an event from a known contract with the actor in an indexed field, so each is
- * provable via Attestcoin, and composing an appointment proof with an action proof yields the
- * only correct claim: "A, an allocator authorised by the owner, moved vault V into market M,
- * inside a cap the curator had set."
- *
- * Read-only: public RPC + hosted Proof Builder + eth_call. No wallet, no gas, no deployment.
- *
- * Usage: node scripts/05-prove-curator-action.js
- */
+// Probe: can Creditcoin prove via Attestcoin who acted on a MetaMorpho vault? Read-only, no gas.
+// ReallocateSupply's caller is an allocator, not necessarily the curator, so roles are proven separately.
 
 const { ethers } = require('ethers');
 const { CHAIN_KEY, CC3_TESTNET, BLOCK_PROVER_ABI } = require('../src/config');
 const { ProofBuilderClient, toVerifierArgs } = require('../src/proofClient');
 
-/**
- * A large, live MetaMorpho vault. Curator/allocator activity here is frequent —
- * measured 344 `ReallocateSupply` events in ~50k blocks (~7 days) on 2026-08-17.
- * Scanning without an address filter finds almost nothing: these events come from
- * thousands of individual vault contracts, not from one hub.
- */
+// Live MetaMorpho vault; these events come from per-vault contracts, so scans must filter by address.
 const VAULT = '0xBEEF01735c132Ada46AA9aA4c54623cAA92A64CB'; // steakUSDC (Steakhouse Financial)
 
 /** Public RPCs vary wildly in allowed getLogs range; this one served 50k-block queries. */

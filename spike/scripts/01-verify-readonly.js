@@ -1,18 +1,5 @@
 'use strict';
-/**
- * Spike step 1 — prove the READ path end-to-end with no wallet, no gas, no deployment.
- *
- *   Sepolia transaction
- *     -> Proof Builder (Merkle inclusion + block continuity proof)
- *     -> Creditcoin BlockProver precompile, invoked via eth_call
- *     -> boolean verdict
- *
- * Because eth_call executes against real chain state without submitting a transaction,
- * this exercises the genuine on-chain verifier. A `true` here means the whole readability
- * path is live for us today.
- *
- * Usage: node scripts/01-verify-readonly.js [txHash]
- */
+// Spike 1: verify a Sepolia tx via Proof Builder and the BlockProver precompile over eth_call (no wallet, no gas).
 
 const { ethers } = require('ethers');
 const { CHAIN_KEY, CC3_TESTNET, BLOCK_PROVER_ABI } = require('../src/config');
@@ -73,8 +60,7 @@ async function main() {
   console.log('calculateTxIndex()   :', derivedIndex.toString(),
     derivedIndex.toString() === String(proof.txIndex) ? '✅ matches proof' : '❌ MISMATCH');
 
-  // The real verification. Try the documented read-only `verify`, then fall back to
-  // eth_call against the state-changing `verifyAndEmit` (eth_call never commits state).
+  // Try read-only `verify`, then fall back to eth_call on `verifyAndEmit` (eth_call never commits state).
   let verified;
   let via;
   try {

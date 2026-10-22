@@ -1,35 +1,6 @@
 'use strict';
-/**
- * THE core proof composition for CuratorLedger — verified on real Ethereum mainnet data.
- *
- * Claim under test: can Attestcoin prove that *the same actor* was granted authority over a
- * vault and later exercised that authority — with the assignment strictly preceding the action?
- *
- * Answer: YES. Two independent transactions on the same vault, both proven and decoded on
- * Creditcoin, both naming the same address:
- *
- *   AUTHORITY  block 22,194,870  SetIsAllocator(0x9e9110cf…f9e1, true)   on steakUSDC
- *   ACTION     block 25,772,893  ReallocateSupply(caller=0x9e9110cf…f9e1, market, assets)
- *                                └─ 3,578,023 blocks (~497 days) after the grant
- *
- * WHY THIS MATTERS: a single ReallocateSupply proof shows only that *some address* moved funds —
- * `onlyAllocatorRole` admits allocator OR curator OR owner. Attribution to a role is only correct
- * when composed with an authority proof. This is why the design needs Attestcoin rather than an
- * event lookup.
- *
- * HONEST LIMITS (do not overstate — see ideation/CORRECTION_ROLE_ATTRIBUTION.md):
- *   1. We do NOT prove the grant was never revoked between the two blocks. Absence is unprovable.
- *      A revocation is itself an event, so it can be *submitted* — but its non-existence cannot.
- *   2. Strictly, X's authority at action time could have come from curator/owner status instead.
- *      The grant is a sufficient and parsimonious explanation, not an exclusive one.
- *   3. DISCOVERY is not trustless. The historical grant was located via Blockscout's indexer
- *      because public RPCs prune state and cap getLogs ranges. Verification is trustless;
- *      finding what to verify is not.
- *
- * Read-only: hosted Proof Builder + eth_call. No wallet, no gas, no deployment.
- *
- * Usage: node scripts/06-prove-authority-action-chain.js
- */
+// Proves the same address was granted allocator role on a vault and later exercised it. Read-only.
+// Limits: a revocation in between cannot be ruled out, and the grant was located via an indexer.
 
 const { ethers } = require('ethers');
 const { CHAIN_KEY, CC3_TESTNET, BLOCK_PROVER_ABI } = require('../src/config');

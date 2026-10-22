@@ -1,16 +1,6 @@
 'use strict';
-/**
- * Spike step 3 — ask the chain itself which source chains it can attest.
- *
- * The docs list supported chains, but the ChainInfo precompile (0x…0FD3) is the authority.
- * It also exposes the attestation/checkpoint bounds a continuity proof must fall inside.
- *
- * Lesson learned the hard way: the precompile's functions are snake_case
- * (`get_supported_chains`, not `getSupportedChains`) and a hand-written ABI reverts with
- * "Unknown selector". Always use the ABI shipped inside @gluwa/usc-sdk.
- *
- * Usage: node scripts/03-chain-info.js
- */
+// Spike 3: ask the ChainInfo precompile which source chains it attests.
+// Its functions are snake_case, so use the ABI shipped in @gluwa/usc-sdk rather than a hand-written one.
 
 const { ethers } = require('ethers');
 const CHAIN_INFO_ABI = require('@gluwa/usc-sdk/dist/chain-info/chain_info.json');

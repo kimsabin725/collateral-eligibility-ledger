@@ -1,12 +1,5 @@
 'use strict';
-/**
- * Thin client for the Attestcoin Proof Builder API.
- *
- * The hosted service computes Merkle inclusion + continuity proofs for a source-chain
- * transaction, so a dApp does not have to run proving infrastructure itself.
- * Endpoints below come from the live OpenAPI spec at
- *   <proofBuilderUrl>/api/swagger/openapi.json  (read 2026-08-17)
- */
+// Thin client for the hosted Attestcoin Proof Builder API (endpoints from its OpenAPI spec).
 
 const { CC3_TESTNET } = require('./config');
 
@@ -29,10 +22,7 @@ class ProofBuilderClient {
     return this.#get('/health');
   }
 
-  /**
-   * Highest source-chain block the attestor set has committed to on Creditcoin.
-   * A transaction can only be proven once its block is at or below this height.
-   */
+  /** Highest source-chain block attested on Creditcoin; only blocks at or below it are provable. */
   async attestedHeight(chainKey) {
     const { attestedHeight } = await this.#get(`/attested-height/${chainKey}`);
     return attestedHeight;
@@ -48,11 +38,7 @@ class ProofBuilderClient {
     return this.#get(`/proof/${chainKey}/${headerNumber}/${txIndex}`);
   }
 
-  /**
-   * Block until `height` has been attested, polling `attestedHeight`.
-   * Mirrors the SDK's `waitUntilHeightAttested`. Measured lag on Sepolia was ~41 blocks
-   * (~8 min) on 2026-08-17, so budget minutes, not seconds, in any live demo.
-   */
+  /** Poll until `height` is attested. Measured lag was ~8 min on Sepolia, so budget minutes in a live demo. */
   async waitUntilAttested(chainKey, height, { intervalMs = 15000, timeoutMs = 1800000 } = {}) {
     const deadline = Date.now() + timeoutMs;
     for (;;) {

@@ -1,11 +1,5 @@
 'use strict';
-/**
- * Attestcoin (formerly USC) spike — network + contract configuration.
- *
- * Every value below was read from the official docs on 2026-08-17:
- *   https://docs.creditcoin.org/attestcoin-protocol/attestcoin-protocol-chains-environments
- * Re-verify before a competition submission; the docs page is the source of truth.
- */
+// Attestcoin network and contract config, read from docs.creditcoin.org on 2026-08-17.
 
 /** Attestcoin "chainKey" values. NOTE: these are protocol-internal ids, NOT EVM chain ids. */
 const CHAIN_KEY = {
@@ -42,13 +36,7 @@ const CC3_TESTNET = {
   },
 };
 
-/**
- * ABI of the BlockProver precompile (0x…0FD2).
- * Mirrors contracts/sol/VerifierInterface.sol in gluwa/usc-testnet-bridge-examples.
- * `verify` is the non-state-changing twin of `verifyAndEmit` documented in
- * docs.creditcoin.org/attestcoin-protocol/architecture — declared here so we can probe it
- * with eth_call. If a probe shows it is absent, fall back to eth_call against verifyAndEmit.
- */
+/** BlockProver precompile ABI; `verify` is declared so it can be probed with eth_call (fall back to verifyAndEmit). */
 const MERKLE_PROOF_T = '(bytes32 root, (bytes32 hash, bool isLeft)[] siblings)';
 const CONTINUITY_PROOF_T = '(bytes32 lowerEndpointDigest, bytes32[] roots)';
 

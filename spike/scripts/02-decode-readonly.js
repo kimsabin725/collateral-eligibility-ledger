@@ -1,17 +1,5 @@
 'use strict';
-/**
- * Spike step 2 — prove the DECODE path read-only.
- *
- * A verified proof only tells you "this transaction was really in the source chain".
- * Business logic needs the contents: did it succeed, which contract emitted which event,
- * with what arguments. That is EvmV1Decoder's job.
- *
- * The decoder library is already deployed on CC3 Testnet, and its functions are
- * `public pure`, so we can exercise every one of them through eth_call — again with no
- * wallet and no gas.
- *
- * Usage: node scripts/02-decode-readonly.js [txHash]
- */
+// Spike 2: exercise the deployed EvmV1Decoder's pure functions via eth_call to decode a proven tx.
 
 const { ethers } = require('ethers');
 const { CHAIN_KEY, CC3_TESTNET } = require('../src/config');
@@ -90,8 +78,7 @@ async function main() {
   console.log('  logs    onchain/decoded:', truth.logs.length, '/', receipt.receiptLogs.length,
     truth.logs.length === receipt.receiptLogs.length ? '✅' : '❌');
 
-  // Event-signature filtering: the primitive every ASC uses to find "its" event.
-  // ethers returns a frozen Result; deep-copy to plain JS before passing it back as input.
+  // ethers returns a frozen Result; deep-copy before passing it back as input.
   if (receipt.receiptLogs.length) {
     const plainReceipt = [
       receipt.receiptStatus,
@@ -110,12 +97,7 @@ async function main() {
       console.log('getLogsByEventSignature(unrelated signature) ->', none.length, 'log(s)',
         none.length === 0 ? '✅ correctly filters' : '❌');
     } catch {
-      // KNOWN DISCREPANCY (verified 2026-08-17 by selector inspection of the deployed bytecode):
-      // the decoder pre-deployed at the address in the chains/environments doc is an OLDER build
-      // that lacks BOTH getLogsByEventSignature overloads present in @gluwa/usc-contracts@0.1.2.
-      // Not a blocker: the official loan-flow tutorial deploys its own EvmV1Decoder library and
-      // links it, which is what we will do too. Filtering by topics[0] in our own contract is
-      // trivial regardless.
+      // The pre-deployed decoder is an older build without getLogsByEventSignature; we deploy our own.
       console.log('\ngetLogsByEventSignature -> ⚠️  absent from the pre-deployed decoder at');
       console.log('   ', CC3_TESTNET.decoderContract);
       console.log('    Deploy EvmV1Decoder from @gluwa/usc-contracts yourself (as the official');

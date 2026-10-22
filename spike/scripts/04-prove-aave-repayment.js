@@ -1,20 +1,5 @@
 'use strict';
-/**
- * Spike step 4 — feasibility probe for the "portable credit history" problem area.
- *
- * Question: can a Creditcoin contract cryptographically verify that a specific wallet
- * actually repaid a loan on Ethereum mainnet — without trusting any score provider,
- * indexer, or API?
- *
- * This script answers it against the live Aave V3 Pool on Ethereum mainnet, read-only.
- * It finds a real `Repay` event inside the attested range, proves it, and verifies it.
- *
- * It also finds `LiquidationCall` events — the adverse counterpart. Both matter: a credit
- * record built only from self-submitted good news is worthless, and because an Attestcoin
- * proof is self-validating, *anyone* can submit adverse evidence about a borrower.
- *
- * Usage: node scripts/04-prove-aave-repayment.js
- */
+// Spike 4: prove a real Aave V3 Repay (and find LiquidationCall) on mainnet, read-only.
 
 const { ethers } = require('ethers');
 const { CHAIN_KEY, CC3_TESTNET, BLOCK_PROVER_ABI } = require('../src/config');
@@ -44,8 +29,7 @@ async function main() {
   console.log(`Lag                   : ${lag} blocks ≈ ${((lag * 12) / 60).toFixed(1)} min\n`);
 
   for (const [name, topic0] of Object.entries(EVENTS)) {
-    // Scan a narrow window just below the attested tip: recent enough for a non-archive
-    // public RPC to serve, old enough to already be attested.
+    // Narrow window below the attested tip: recent enough for a public RPC, old enough to be attested.
     let logs = [];
     try {
       logs = await eth.getLogs({
