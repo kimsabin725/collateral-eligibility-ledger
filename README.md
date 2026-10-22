@@ -1,5 +1,9 @@
 # Collateral Eligibility Ledger
 
+- **Problem:** when an issuer pauses an asset it stops being usable as collateral before its oracle price moves, and lending markets on another chain cannot verify that event themselves.
+- **Built:** a Creditcoin ledger that verifies an Attestcoin proof of the Ethereum event, flips the asset's eligibility, and gates new credit against it without blocking the exit.
+- **Proven:** 83/83 tests; a real Ethereum mainnet `Paused` event (sNUSD, block 25,745,732) admitted on CC3 Testnet by [`EligibilityLedger` `0x00Fc…FF32`](https://creditcoin3-testnet.subscan.io/account/0x00FcAE7CD35919d91322Ba30B42B51b4b379FF32).
+
 **An asset can stop being usable as collateral before its price moves. On-chain credit only has
 the price axis. This proves the other one, across chains.**
 
